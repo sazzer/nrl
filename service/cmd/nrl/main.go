@@ -1,5 +1,12 @@
 package main
 
-import _ "github.com/joho/godotenv/autoload"
+import (
+	"fmt"
 
-func main() {}
+	_ "github.com/joho/godotenv/autoload"
+)
+
+func main() {
+	c := loadConfig()
+	fmt.Printf("%+v\n", c)
+}
