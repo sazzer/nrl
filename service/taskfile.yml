@@ -1,0 +1,37 @@
+version: "3"
+
+output: prefixed
+
+tasks:
+  default:
+    - task: test
+
+  clean:
+    - rm -rf output
+
+  tidy:
+    - task: clean
+    - go get -u ./...
+    - go mod tidy
+
+  prepare:
+    - go get ./...
+
+  check:
+    - task: prepare
+    - golangci-lint run --allow-parallel-runners
+
+  test:
+    - task: prepare
+    - task: check
+    - go test ./...
+
+  build:
+    - task: prepare
+    - task: test
+    - go build -o output/nrl ./cmd/nrl/*
+
+  run:
+    - task: prepare
+    - task: check
+    - go run ./cmd/nrl/*
