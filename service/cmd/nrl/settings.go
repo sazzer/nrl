@@ -1,14 +1,15 @@
 package main
 
 import (
-	"log"
-
 	"github.com/kelseyhightower/envconfig"
+	"github.com/rs/zerolog/log"
 )
 
 // Config represents the configuration of the application.
 type Config struct {
 	Debug bool
+
+	Port uint16 `default:"8000"`
 }
 
 // loadConfig loads the configuration to use for the app.
@@ -17,7 +18,7 @@ func loadConfig() Config {
 
 	err := envconfig.Process("", &c)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal().Err(err).Msg("Failed to load config")
 	}
 
 	return c
