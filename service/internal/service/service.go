@@ -1,10 +1,8 @@
 package service
 
 import (
-	"net/http"
-
-	"github.com/go-chi/chi"
 	"github.com/rs/zerolog/log"
+	"github.com/sazzer/nrl/sazzer/internal/health"
 	"github.com/sazzer/nrl/sazzer/internal/server"
 )
 
@@ -15,13 +13,11 @@ type Service struct {
 
 // New creates a new instance of the service.
 func New() Service {
-	s := server.New()
+	health := health.New(map[string]health.Healthchecker{})
 
-	s.Config(server.ConfigurerFunc(func(r chi.Router) {
-		r.Post("/", func(w http.ResponseWriter, r *http.Request) {
-			_, _ = w.Write([]byte("welcome"))
-		})
-	}))
+	s := server.New([]server.Configurer{
+		health,
+	})
 
 	return Service{
 		server: s,

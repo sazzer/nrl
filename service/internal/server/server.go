@@ -15,7 +15,7 @@ type Server struct {
 	router chi.Router
 }
 
-func New() Server {
+func New(config []Configurer) Server {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -29,6 +29,10 @@ func New() Server {
 		AllowedHeaders:   []string{"Authorization"},
 		AllowCredentials: true,
 	}))
+
+	for _, c := range config {
+		c.ConfigureRoutes(r)
+	}
 
 	return Server{
 		router: r,
