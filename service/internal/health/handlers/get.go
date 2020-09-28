@@ -3,12 +3,13 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 )
 
 // CheckHealth performs the healthcheck and writes the response to the client.
-func (h Handler) CheckHealth(w http.ResponseWriter, r *http.Request) {
-	health := h.service.CheckHealth(r.Context())
+func (h Handler) CheckHealth(c echo.Context) error {
+	health := h.service.CheckHealth(c.Request().Context())
 
 	components := map[string]ComponentHealth{}
 
@@ -31,5 +32,10 @@ func (h Handler) CheckHealth(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug().Interface("result", systemHealth).Msg("System Health")
 
-	_, _ = w.Write([]byte("welcome"))
+	status := http.StatusOK
+	if !health.Healthy() {
+		status = http.StatusServiceUnavailable
+	}
+
+	return c.JSON(status, systemHealth)
 }

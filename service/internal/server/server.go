@@ -2,40 +2,34 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"time"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/cors"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog/log"
 )
 
 type Server struct {
-	router chi.Router
+	router *echo.Echo
 }
 
 func New(config []Configurer) Server {
-	r := chi.NewRouter()
+	e := echo.New()
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
-	r.Use(middleware.GetHead)
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.RequestID())
 
-	r.Use(cors.Handler(cors.Options{
-		AllowedHeaders:   []string{"Authorization"},
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
+		MaxAge:           300,
 	}))
 
 	for _, c := range config {
-		c.ConfigureRoutes(r)
+		c.ConfigureRoutes(e)
 	}
 
 	return Server{
-		router: r,
+		router: e,
 	}
 }
 
@@ -44,7 +38,7 @@ func (s Server) Start(port uint16) {
 	address := fmt.Sprintf(":%d", port)
 	log.Info().Str("address", address).Msg("Starting Server")
 
-	err := http.ListenAndServe(address, s.router)
+	err := s.router.Start(address)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to start HTTP Server")
 	}

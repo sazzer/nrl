@@ -1,7 +1,7 @@
 package health
 
 import (
-	"github.com/go-chi/chi"
+	"github.com/labstack/echo/v4"
 	"github.com/sazzer/nrl/sazzer/internal/health"
 	"github.com/sazzer/nrl/sazzer/internal/health/handlers"
 )
@@ -26,9 +26,9 @@ func (c Config) WithHealthcheck(name string, check health.Healthchecker) Config 
 }
 
 // ConfigureRoutes wires up the healthchecker endpoint onto the HTTP router.
-func (c Config) ConfigureRoutes(r chi.Router) {
+func (c Config) ConfigureRoutes(e *echo.Echo) {
 	service := health.New(c.healthcheckers)
 	handler := handlers.New(service)
 
-	r.Get("/health", handler.CheckHealth)
+	e.GET("/health", handler.CheckHealth)
 }
