@@ -1,0 +1,11 @@
+(ioutil.nopCloser) {
+  Reader: (*bytes.Reader)({
+    s: ([]uint8) (len=33) {
+      00000000  7b 22 63 6f 6d 70 6f 6e  65 6e 74 73 22 3a 7b 7d  |{"components":{}|
+      00000010  2c 22 68 65 61 6c 74 68  79 22 3a 74 72 75 65 7d  |,"healthy":true}|
+      00000020  0a                                                |.|
+    },
+    i: (int64) 0,
+    prevRune: (int) -1
+  })
+}

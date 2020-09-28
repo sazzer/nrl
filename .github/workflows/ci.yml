@@ -20,6 +20,10 @@ jobs:
           version: v1.30
           working-directory: service
 
-      - name: Test
+      - name: Unit Test
         working-directory: service
-        run: go test ./...
+        run: go test ./internal/...
+
+      - name: Integration Test
+      working-directory: service
+      run: go test ./tests/...

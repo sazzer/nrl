@@ -4,7 +4,10 @@ output: prefixed
 
 tasks:
   default:
+    - task: prepare
+    - task: check
     - task: test
+    - task: integration
 
   clean:
     - rm -rf output
@@ -18,20 +21,19 @@ tasks:
     - go get ./...
 
   check:
-    - task: prepare
     - golangci-lint run --allow-parallel-runners
 
   test:
-    - task: prepare
-    - task: check
-    - go test ./...
+    - go test ./internal/...
+
+  integration:
+    - go test ./tests/...
 
   build:
-    - task: prepare
+    - task: check
     - task: test
     - go build -o output/nrl ./cmd/nrl/*
 
   run:
-    - task: prepare
     - task: check
     - go run ./cmd/nrl/*
