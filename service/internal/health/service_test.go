@@ -18,7 +18,7 @@ func (f healthcheckerFunc) Healthcheck(ctx context.Context) error {
 func TestEmptyService(t *testing.T) {
 	service := health.New(map[string]health.Healthchecker{})
 
-	result := service.Service.CheckHealth(context.Background())
+	result := service.CheckHealth(context.Background())
 
 	assert.True(t, result.Healthy())
 	assert.Equal(t, 0, len(result.Components))
@@ -29,7 +29,7 @@ func TestHealthyService(t *testing.T) {
 		"healthy": healthcheckerFunc(func(context.Context) error { return nil }),
 	})
 
-	result := service.Service.CheckHealth(context.Background())
+	result := service.CheckHealth(context.Background())
 
 	assert.True(t, result.Healthy())
 	assert.Equal(t, 1, len(result.Components))
@@ -44,7 +44,7 @@ func TestUnhealthyService(t *testing.T) {
 		"unhealthy": healthcheckerFunc(func(context.Context) error { return errors.New("Oops") }),
 	})
 
-	result := service.Service.CheckHealth(context.Background())
+	result := service.CheckHealth(context.Background())
 
 	assert.False(t, result.Healthy())
 	assert.Equal(t, 1, len(result.Components))
@@ -60,7 +60,7 @@ func TestMixedService(t *testing.T) {
 		"unhealthy": healthcheckerFunc(func(context.Context) error { return errors.New("Oops") }),
 	})
 
-	result := service.Service.CheckHealth(context.Background())
+	result := service.CheckHealth(context.Background())
 
 	assert.False(t, result.Healthy())
 	assert.Equal(t, 2, len(result.Components))
