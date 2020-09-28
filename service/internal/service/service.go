@@ -1,6 +1,9 @@
 package service
 
 import (
+	"net/http"
+
+	"github.com/go-chi/chi"
 	"github.com/rs/zerolog/log"
 	"github.com/sazzer/nrl/sazzer/internal/server"
 )
@@ -12,9 +15,17 @@ type Service struct {
 
 // New creates a new instance of the service.
 func New() Service {
-	server := server.New()
+	s := server.New()
 
-	return Service{server}
+	s.Config(server.ConfigurerFunc(func(r chi.Router) {
+		r.Post("/", func(w http.ResponseWriter, r *http.Request) {
+			_, _ = w.Write([]byte("welcome"))
+		})
+	}))
+
+	return Service{
+		server: s,
+	}
 }
 
 // Start starts the service listening on the provided HTTP port.

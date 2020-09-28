@@ -30,10 +30,6 @@ func New() Server {
 		AllowCredentials: true,
 	}))
 
-	r.Post("/", func(w http.ResponseWriter, r *http.Request) {
-		_, _ = w.Write([]byte("welcome"))
-	})
-
 	return Server{
 		router: r,
 	}
