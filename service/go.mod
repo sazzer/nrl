@@ -8,6 +8,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rs/zerolog v1.20.0
+	github.com/stretchr/testify v1.6.1
 	golang.org/x/net v0.0.0-20200927032502-5d4f70055728 // indirect
 	golang.org/x/text v0.3.3 // indirect
 )

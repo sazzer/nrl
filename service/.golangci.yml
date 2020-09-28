@@ -5,3 +5,6 @@ linters:
     - gomnd
     - gofumpt
     - gci
+linters-settings:
+  gofmt:
+    simplify: false
