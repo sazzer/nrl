@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/rs/zerolog/log"
+	"github.com/sazzer/nrl/sazzer/internal/database"
 	health "github.com/sazzer/nrl/sazzer/internal/health/config"
 	"github.com/sazzer/nrl/sazzer/internal/server"
 )
@@ -12,8 +13,10 @@ type Service struct {
 }
 
 // New creates a new instance of the service.
-func New() Service {
-	health := health.New()
+func New(databaseURL string) Service {
+	db := database.New(databaseURL)
+
+	health := health.New().WithHealthcheck("db", db)
 
 	s := server.New([]server.Configurer{
 		health,

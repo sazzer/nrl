@@ -10,6 +10,8 @@ type Config struct {
 	Debug bool
 
 	Port uint16 `default:"8000"`
+
+	DatabaseURL string `required:"true" envconfig:"database_url"`
 }
 
 // loadConfig loads the configuration to use for the app.

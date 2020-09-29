@@ -25,6 +25,6 @@ func main() {
 
 	log.Debug().Interface("config", c).Msg("Loaded Config")
 
-	service := service.New()
+	service := service.New(c.DatabaseURL)
 	service.Start(c.Port)
 }

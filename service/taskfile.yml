@@ -29,6 +29,12 @@ tasks:
   integration:
     - go test ./tests/...
 
+  integrationUpdate:
+    cmds:
+      - go test ./tests/...
+    env:
+      UPDATE_SNAPSHOTS: true
+
   build:
     - task: check
     - task: test

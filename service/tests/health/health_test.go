@@ -6,13 +6,13 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"
-	"github.com/sazzer/nrl/sazzer/tests"
+	"github.com/sazzer/nrl/sazzer/tests/testservice"
 	"gotest.tools/assert"
 )
 
 func TestHealth(t *testing.T) {
-	service := tests.New()
-	defer service.Close()
+	service := testservice.New(t)
+	defer service.Close(t)
 
 	res := service.Inject(httptest.NewRequest("GET", "/health", nil))
 	defer res.Body.Close()

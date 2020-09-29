@@ -1,29 +1,42 @@
-package tests
+package testservice
 
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"testing"
+	"time"
 
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/sazzer/nrl/sazzer/internal/service"
 )
 
 // TestService is a wrapper around the service being tested.
 type TestService struct {
-	service service.Service
+	testDatabase TestDatabase
+	service      service.Service
 }
 
 // New creates a new instance of TestService.
-func New() TestService {
-	service := service.New()
+func New(t *testing.T) TestService {
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).With().Caller().Logger()
+
+	db := NewDatabase(t)
+
+	service := service.New(db.URL(t))
 
 	return TestService{
-		service: service,
+		testDatabase: db,
+		service:      service,
 	}
 }
 
 // Close the TestService down, freeing up anything it's currently doing.
-func (s *TestService) Close() {
-
+func (s *TestService) Close(t *testing.T) {
+	s.testDatabase.Close(t)
 }
 
 // Inject will send an HTTP Request into the service and return the response.
