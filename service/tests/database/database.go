@@ -17,6 +17,10 @@ type TestDatabase struct {
 
 // Create a new database connection.
 func New(t *testing.T) TestDatabase {
+	if testing.Short() {
+		t.Skip("Not running database tests")
+	}
+
 	ctx := context.Background()
 
 	log.Debug().Msg("Starting test database")
