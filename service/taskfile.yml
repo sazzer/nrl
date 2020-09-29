@@ -24,14 +24,14 @@ tasks:
     - golangci-lint run --allow-parallel-runners
 
   test:
-    - go test ./internal/...
+    - go test ./internal/... -v
 
   integration:
-    - go test ./tests/...
+    - go test ./tests/... -v
 
   integrationUpdate:
     cmds:
-      - go test ./tests/...
+      - go test ./tests/... -v
     env:
       UPDATE_SNAPSHOTS: true
 
