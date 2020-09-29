@@ -1,4 +1,4 @@
-package testservice
+package database
 
 import (
 	"context"
@@ -16,7 +16,7 @@ type TestDatabase struct {
 }
 
 // Create a new database connection.
-func NewDatabase(t *testing.T) TestDatabase {
+func New(t *testing.T) TestDatabase {
 	ctx := context.Background()
 
 	log.Debug().Msg("Starting test database")

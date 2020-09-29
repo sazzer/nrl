@@ -10,11 +10,12 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/sazzer/nrl/sazzer/internal/service"
+	"github.com/sazzer/nrl/sazzer/tests/database"
 )
 
 // TestService is a wrapper around the service being tested.
 type TestService struct {
-	testDatabase TestDatabase
+	testDatabase database.TestDatabase
 	service      service.Service
 }
 
@@ -24,7 +25,7 @@ func New(t *testing.T) TestService {
 
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).With().Caller().Logger()
 
-	db := NewDatabase(t)
+	db := database.New(t)
 
 	service := service.New(db.URL(t))
 
