@@ -27,3 +27,22 @@ jobs:
       - name: Integration Test
         working-directory: service
         run: go test ./tests/...
+
+  build-service-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Get the git tag
+        run: |
+          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+
+      - uses: whoan/docker-build-with-cache-action@v5
+        with:
+          registry: docker.pkg.github.com
+          username: "publisher"
+          password: "${{ secrets.GITHUB_TOKEN }}"
+          image_name: "${{ format('{0}/nrl-service', github.repository) }}"
+          image_tag: "${{ env.GIT_TAG }}"
+          push_git_tag: true
+          context: service

@@ -46,3 +46,6 @@ tasks:
     - task: prepare
     - task: check
     - go run ./cmd/nrl/*
+
+  docker:
+    - docker build -t nrl-service .
