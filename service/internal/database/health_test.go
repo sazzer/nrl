@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/sazzer/nrl/sazzer/internal/database"
-	"github.com/sazzer/nrl/sazzer/tests/testdatabase"
+	"github.com/sazzer/nrl/service/internal/database"
+	"github.com/sazzer/nrl/service/tests/testdatabase"
 	"github.com/stretchr/testify/assert"
 )
 

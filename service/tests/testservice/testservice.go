@@ -9,8 +9,8 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/sazzer/nrl/sazzer/internal/service"
-	"github.com/sazzer/nrl/sazzer/tests/testdatabase"
+	"github.com/sazzer/nrl/service/internal/service"
+	"github.com/sazzer/nrl/service/tests/testdatabase"
 )
 
 // TestService is a wrapper around the service being tested.

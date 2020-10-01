@@ -19,6 +19,7 @@ tasks:
 
   prepare:
     - go get ./...
+    - go generate -v ./...
 
   check:
     - golangci-lint run --allow-parallel-runners
@@ -36,10 +37,12 @@ tasks:
       UPDATE_SNAPSHOTS: true
 
   build:
+    - task: prepare
     - task: check
     - task: test
     - go build -o output/nrl ./cmd/nrl/*
 
   run:
+    - task: prepare
     - task: check
     - go run ./cmd/nrl/*

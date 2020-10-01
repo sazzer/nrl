@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"
-	"github.com/sazzer/nrl/sazzer/tests/testservice"
+	"github.com/sazzer/nrl/service/tests/testservice"
 	"gotest.tools/assert"
 )
 

@@ -1,6 +1,6 @@
 package handlers
 
-import "github.com/sazzer/nrl/sazzer/internal/health"
+import "github.com/sazzer/nrl/service/internal/health"
 
 // Handler represents the HTTP Handlers for working with healthchecks.
 type Handler struct {
