@@ -5,6 +5,7 @@ import (
 	"github.com/sazzer/nrl/service/internal/infrastructure/database"
 	health "github.com/sazzer/nrl/service/internal/infrastructure/health/config"
 	"github.com/sazzer/nrl/service/internal/infrastructure/server"
+	users "github.com/sazzer/nrl/service/internal/users/config"
 )
 
 // Service represents the actual running service for the application.
@@ -18,8 +19,11 @@ func New(databaseURL string) Service {
 
 	health := health.New().WithHealthcheck("db", db)
 
+	users := users.New()
+
 	s := server.New([]server.Configurer{
 		health,
+		users,
 	})
 
 	return Service{
