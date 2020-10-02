@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/sazzer/nrl/service/internal/infrastructure/database"
 	"github.com/sazzer/nrl/service/internal/users/service"
 )
 
@@ -11,8 +12,8 @@ type Config struct {
 }
 
 // New creates a new instance of the configuration.
-func New() Config {
-	serviceConfig := service.New()
+func New(db database.Database) Config {
+	serviceConfig := service.New(db)
 
 	return Config{
 		Config: serviceConfig,

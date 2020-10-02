@@ -19,7 +19,7 @@ func New(databaseURL string) Service {
 
 	health := health.New().WithHealthcheck("db", db)
 
-	users := users.New()
+	users := users.New(db)
 
 	s := server.New([]server.Configurer{
 		health,
