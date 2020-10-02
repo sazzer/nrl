@@ -21,6 +21,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 WORKDIR /nrl
 
+COPY docker/start.sh /nrl/start.sh
 COPY --from=builder /nrl/output/nrl /nrl/nrl
 
-CMD /nrl/nrl
+CMD /nrl/start.sh

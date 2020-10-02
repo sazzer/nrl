@@ -46,3 +46,68 @@ jobs:
           image_tag: "${{ env.GIT_TAG }}"
           push_git_tag: true
           context: service
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs:
+      - test-service
+      - build-service-container
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get the git tag
+        run: |
+          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+
+      - name: Docker login
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+
+      - name: Pull Service Container
+        run: |
+          docker pull docker.pkg.github.com/${{ format('{0}/nrl-service', github.repository) }}:${{ env.GIT_TAG }}
+          docker tag docker.pkg.github.com/${{ format('{0}/nrl-service', github.repository) }}:${{ env.GIT_TAG }} nrl-service:latest
+
+      - name: Start Services
+        working-directory: e2e
+        run: docker-compose up -d
+
+      - name: Service Logs
+        if: always()
+        working-directory: e2e
+        run: docker-compose logs service
+
+  deploy-service-container:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs:
+      - e2e
+    steps:
+      - name: Get the git tag
+        run: |
+          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+
+      - name: Docker login
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+
+      - name: Push container
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          docker pull docker.pkg.github.com/${{ format('{0}/nrl-service', github.repository) }}:${{ env.GIT_TAG }}
+          docker tag docker.pkg.github.com/${{ format('{0}/nrl-service', github.repository) }}:${{ env.GIT_TAG }} registry.heroku.com/nrl-cd/web
+          docker push registry.heroku.com/nrl-cd/web
+
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a nrl-cd web

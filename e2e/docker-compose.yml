@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:12.4-alpine
+    environment:
+      POSTGRES_DB: nrl
+      POSTGRES_USER: nrl
+      POSTGRES_PASSWORD: nrl
+    ports:
+      - "127.0.0.1:35432:5432"
+    networks:
+      - nrl-e2e
+
+  service:
+    image: nrl-service
+    environment:
+      - DOCKERIZE_ARGS=-wait tcp://postgres:5432
+      - DATABASE_URL=postgres://nrl:nrl@postgres/nrl
+    ports:
+      - "127.0.0.1:38000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - nrl-e2e
+
+networks:
+  nrl-e2e:
