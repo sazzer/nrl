@@ -2,9 +2,9 @@ package service
 
 import (
 	"github.com/rs/zerolog/log"
-	"github.com/sazzer/nrl/service/internal/database"
-	health "github.com/sazzer/nrl/service/internal/health/config"
-	"github.com/sazzer/nrl/service/internal/server"
+	"github.com/sazzer/nrl/service/internal/infrastructure/database"
+	health "github.com/sazzer/nrl/service/internal/infrastructure/health/config"
+	"github.com/sazzer/nrl/service/internal/infrastructure/server"
 )
 
 // Service represents the actual running service for the application.

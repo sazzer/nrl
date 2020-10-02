@@ -9,7 +9,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/sazzer/nrl/service/internal/service"
+	"github.com/sazzer/nrl/service/internal/infrastructure/service"
 	"github.com/sazzer/nrl/service/tests/testdatabase"
 )
 

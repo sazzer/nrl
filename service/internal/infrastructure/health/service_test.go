@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/sazzer/nrl/service/internal/health"
+	"github.com/sazzer/nrl/service/internal/infrastructure/health"
 	"github.com/stretchr/testify/assert"
 )
 

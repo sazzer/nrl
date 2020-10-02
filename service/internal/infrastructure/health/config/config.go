@@ -2,8 +2,8 @@ package health
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/sazzer/nrl/service/internal/health"
-	"github.com/sazzer/nrl/service/internal/health/handlers"
+	"github.com/sazzer/nrl/service/internal/infrastructure/health"
+	"github.com/sazzer/nrl/service/internal/infrastructure/health/handlers"
 )
 
 // Config represents the module configuration for the healthchecks.
