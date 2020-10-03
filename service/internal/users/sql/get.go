@@ -28,5 +28,5 @@ func (r repository) GetUserByID(ctx context.Context, id users.UserID) (users.Use
 
 	log.Debug().Interface("id", id).Interface("user", user).Msg("Found User by ID")
 
-	return users.UserModel{}, users.ErrUserNotFound
+	return user.UserModel(), nil
 }

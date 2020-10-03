@@ -43,12 +43,12 @@ func TestGetUserByID_KnownUser(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	assert.Equal(t, seedUser.UserID, user.ID)
-	// assert.Equal(t, seedUser.Version, user.Version)
-	// assert.Equal(t, seedUser.Created, user.Created)
-	// assert.Equal(t, seedUser.Updated, user.Updated)
+	assert.Equal(t, users.UserID(seedUser.UserID), user.ID)
+	assert.Equal(t, seedUser.Version, user.Version)
+	assert.Equal(t, seedUser.Created, user.Created)
+	assert.Equal(t, seedUser.Updated, user.Updated)
 
-	// assert.Equal(t, seedUser.Email, user.Email)
-	// assert.Equal(t, seedUser.DisplayName, user.DisplayName)
-	// assert.Equal(t, []users.Authentication{}, user.Authentications)
+	assert.Equal(t, users.Email(seedUser.Email), user.Email)
+	assert.Equal(t, seedUser.DisplayName, user.DisplayName)
+	assert.Equal(t, []users.Authentication{}, user.Authentications)
 }

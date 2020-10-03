@@ -20,8 +20,8 @@ func NewUser() SeedUser {
 	return SeedUser{
 		UserID:      uuid.New(),
 		Version:     uuid.New(),
-		Created:     time.Now(),
-		Updated:     time.Now(),
+		Created:     time.Now().UTC(),
+		Updated:     time.Now().UTC(),
 		Email:       fmt.Sprintf("%s@example.com", uuid.New()),
 		DisplayName: fmt.Sprintf("Test User - %s", uuid.New()),
 	}
