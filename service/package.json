@@ -1,0 +1,10 @@
+{
+  "name": "nrl-service",
+  "version": "1.0.0",
+  "description": "Narrative Roguelike - Backend Service",
+  "author": "Graham Cox <graham@grahamcox.co.uk>",
+  "license": "ISC",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
