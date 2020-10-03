@@ -34,8 +34,8 @@ func (u SeedUser) SQL() string {
 
 func (u SeedUser) Binds() []interface{} {
 	return []interface{}{
-		u.UserID,
-		u.Version,
+		u.UserID.String(),
+		u.Version.String(),
 		u.Created,
 		u.Updated,
 		u.Email,

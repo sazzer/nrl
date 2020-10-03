@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/sazzer/nrl/service/internal/users"
@@ -14,10 +15,10 @@ import (
 func (r repository) GetUserByID(ctx context.Context, id users.UserID) (users.UserModel, error) {
 	log.Debug().Interface("id", id).Msg("Finding User by ID")
 
-	row := r.db.QueryRow(ctx, "SELECT * FROM users WHERE user_id = $1", id)
+	row := r.db.QueryRow(ctx, "SELECT * FROM users WHERE user_id = $1", uuid.UUID(id).String())
 
 	var user user
-	if err := row.Scan(&user); err != nil {
+	if err := row.StructScan(&user); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return users.UserModel{}, users.ErrUserNotFound
 		}

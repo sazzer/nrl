@@ -2,31 +2,24 @@ package database
 
 import (
 	"context"
+	"database/sql"
 
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/log/zerologadapter"
-	"github.com/jackc/pgx/v4/pgxpool"
+	// Database drivers.
+	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
 	"github.com/rs/zerolog/log"
 )
 
 // Database is the wrapper around the database connections.
 type Database struct {
-	db *pgxpool.Pool
+	db *sqlx.DB
 }
 
 // New creates a new database connection to the provided URL.
 func New(url string) Database {
 	log.Debug().Str("url", url).Msg("Connecting to database")
 
-	config, err := pgxpool.ParseConfig(url)
-	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to parse database connection string")
-	}
-
-	config.ConnConfig.LogLevel = pgx.LogLevelDebug
-	config.ConnConfig.Logger = zerologadapter.NewLogger(log.Logger)
-
-	db, err := pgxpool.ConnectConfig(context.Background(), config)
+	db, err := sqlx.Connect("pgx", url)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to connect to database")
 	}
@@ -41,10 +34,10 @@ func New(url string) Database {
 }
 
 // Tx will start a new database transaction for queries against the database.
-func (d Database) Tx(ctx context.Context) pgx.Tx {
+func (d Database) Tx(ctx context.Context) *sqlx.Tx {
 	log.Debug().Msg("Starting transaction")
 
-	tx, err := d.db.Begin(ctx)
+	tx, err := d.db.BeginTxx(ctx, &sql.TxOptions{})
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to start transaction")
 	}

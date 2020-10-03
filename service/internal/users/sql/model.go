@@ -2,13 +2,11 @@ package sql
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type user struct {
-	UserID  uuid.UUID `db:"user_id"`
-	Version uuid.UUID `db:"version"`
+	UserID  string    `db:"user_id"`
+	Version string    `db:"version"`
 	Created time.Time `db:"created"`
 	Updated time.Time `db:"updated"`
 
