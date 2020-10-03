@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/rs/zerolog/log"
+	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -40,13 +41,9 @@ func New(t *testing.T) TestDatabase {
 		ContainerRequest: req,
 		Started:          true,
 	})
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to start test database")
+	assert.NoError(t, err)
 
-		t.Fatal(err)
-	} else {
-		log.Debug().Msg("Started test database")
-	}
+	log.Debug().Msg("Started test database")
 
 	return TestDatabase{
 		container: pgC,
@@ -54,27 +51,21 @@ func New(t *testing.T) TestDatabase {
 }
 
 // Close the database connection.
-func (d TestDatabase) Close(t *testing.T) {
+func (db TestDatabase) Close(t *testing.T) {
 	ctx := context.Background()
 
-	err := d.container.Terminate(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
+	err := db.container.Terminate(ctx)
+	assert.NoError(t, err)
 }
 
-func (d TestDatabase) URL(t *testing.T) string {
+func (db TestDatabase) URL(t *testing.T) string {
 	ctx := context.Background()
 
-	ip, err := d.container.Host(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
+	ip, err := db.container.Host(ctx)
+	assert.NoError(t, err)
 
-	port, err := d.container.MappedPort(ctx, "5432/tcp")
-	if err != nil {
-		t.Fatal(err)
-	}
+	port, err := db.container.MappedPort(ctx, "5432/tcp")
+	assert.NoError(t, err)
 
 	return fmt.Sprintf("postgres://nrl-test:nrl-test@%s:%d/nrl-test", ip, port.Int())
 }

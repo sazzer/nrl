@@ -1,9 +1,13 @@
 package users
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // UserID is the ID of the user within this system.
-type UserID string
+type UserID uuid.UUID
 
 // Email is the email address of the user.
 type Email string
@@ -28,7 +32,7 @@ type UserData struct {
 // UserModel is the model representation of a user that exists in the data store.
 type UserModel struct {
 	ID      UserID
-	Version string
+	Version uuid.UUID
 	Created time.Time
 	Updated time.Time
 	UserData
