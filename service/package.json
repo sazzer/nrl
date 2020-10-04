@@ -10,10 +10,12 @@
     "clean": "rimraf output",
     "start": "ts-node ./src/index.ts",
     "build:compile": "tsc",
-    "build": "run-s clean build:compile"
+    "build": "run-s clean build:compile",
+    "test": "jest"
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^26.0.14",
     "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
@@ -21,9 +23,11 @@
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
+    "jest": "^26.4.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   },
