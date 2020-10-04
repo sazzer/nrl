@@ -5,6 +5,7 @@ import compression from "compression";
 import cors from "cors";
 import { createLogger } from "../../logger";
 import helmet from "helmet";
+import pinoHttp from "pino-http";
 import requestId from "express-request-id";
 import responseTime from "response-time";
 import rtracer from "cls-rtracer";
@@ -20,6 +21,7 @@ export class Server {
     app.use(responseTime());
     app.use(timeout("5s"));
     app.use(requestId());
+    app.use(pinoHttp());
     app.use(
       rtracer.expressMiddleware({
         useHeader: true,
