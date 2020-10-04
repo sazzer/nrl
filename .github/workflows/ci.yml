@@ -10,23 +10,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-node@v2-beta
         with:
-          go-version: "^1.15"
+          node-version: "14"
+
+      - name: Install
+        working-directory: service
+        run: npm install
 
       - name: Lint
-        uses: golangci/golangci-lint-action@v1
-        with:
-          version: v1.30
-          working-directory: service
+        working-directory: service
+        run: npm run lint
 
       - name: Unit Test
         working-directory: service
-        run: go test ./internal/...
-
-      - name: Integration Test
-        working-directory: service
-        run: go test ./tests/...
+        run: npm test
 
   build-service-container:
     runs-on: ubuntu-latest
