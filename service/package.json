@@ -8,7 +8,7 @@
     "lint": "eslint src --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "clean": "rimraf output",
-    "start": "ts-node ./src/index.ts",
+    "start": "ts-node ./src/index.ts | pino-pretty",
     "build:compile": "tsc",
     "build": "run-s clean build:compile",
     "test": "jest"
@@ -24,8 +24,8 @@
     "express": "^4.17.1",
     "express-request-id": "^1.4.1",
     "helmet": "^4.1.1",
-    "response-time": "^2.3.2",
-    "signale": "^1.4.0"
+    "pino": "^6.6.1",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -38,8 +38,8 @@
     "@types/helmet": "0.0.48",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.2",
+    "@types/pino": "^6.3.2",
     "@types/response-time": "^2.3.4",
-    "@types/signale": "^1.4.1",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "eslint": "^7.10.0",
@@ -48,6 +48,7 @@
     "husky": "^4.3.0",
     "jest": "^26.4.2",
     "npm-run-all": "^4.1.5",
+    "pino-pretty": "^4.2.1",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.1",
@@ -63,18 +64,5 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "rootDir": "./src"
-  },
-  "signale": {
-    "displayScope": true,
-    "displayBadge": true,
-    "displayDate": true,
-    "displayFilename": true,
-    "displayLabel": true,
-    "displayTimestamp": true,
-    "underlineLabel": true,
-    "underlineMessage": false,
-    "underlinePrefix": false,
-    "underlineSuffix": false,
-    "uppercaseLabel": true
   }
 }

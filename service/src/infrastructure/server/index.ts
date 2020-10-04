@@ -3,14 +3,14 @@ import express, { Express } from "express";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cors from "cors";
+import { createLogger } from "../../logger";
 import helmet from "helmet";
 import requestId from "express-request-id";
 import responseTime from "response-time";
 import rtracer from "cls-rtracer";
-import signale from "signale";
 import timeout from "connect-timeout";
 
-const LOGGER = signale.scope("server");
+const LOGGER = createLogger("server");
 
 export class Server {
   private app: Express;
@@ -38,7 +38,7 @@ export class Server {
   }
 
   start(port: number): void {
-    LOGGER.info("Starting server", { port });
+    LOGGER.info({ port }, "Starting service");
     this.app.listen(port);
   }
 }

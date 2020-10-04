@@ -1,7 +1,7 @@
 import { Server } from "../server";
-import signale from "signale";
+import { createLogger } from "../../logger";
 
-const LOGGER = signale.scope("service");
+const LOGGER = createLogger("service");
 
 export class Service {
   private server: Server;
@@ -13,7 +13,7 @@ export class Service {
   }
 
   start(port: number): void {
-    LOGGER.info("Starting service", { port });
+    LOGGER.info({ port }, "Starting service");
     this.server.start(port);
   }
 }
