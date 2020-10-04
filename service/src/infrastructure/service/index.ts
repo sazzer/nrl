@@ -1,3 +1,4 @@
+import { HealthConfig } from "../health/config";
 import { Server } from "../server";
 import { createLogger } from "../../logger";
 
@@ -16,7 +17,11 @@ export class Service {
    */
   constructor() {
     LOGGER.info("Building service");
-    this.server = new Server([]);
+
+    const health = new HealthConfig();
+
+    this.server = new Server([health]);
+
     LOGGER.info("Built service");
   }
 

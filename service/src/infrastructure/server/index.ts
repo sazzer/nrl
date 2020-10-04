@@ -51,7 +51,10 @@ export class Server {
     app.use(cors());
     app.use(helmet());
 
-    components.forEach((c) => c.registerRoutes(app));
+    components.forEach((c) => {
+      LOGGER.debug({ component: c.constructor.name }, "Registering component");
+      c.registerRoutes(app);
+    });
 
     this.app = app;
   }

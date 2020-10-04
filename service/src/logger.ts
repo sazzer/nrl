@@ -7,5 +7,6 @@ import pino, { Logger } from "pino";
 export function createLogger(name: string): Logger {
   return pino({
     name,
+    level: "debug",
   });
 }
