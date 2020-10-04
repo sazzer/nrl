@@ -1,12 +1,19 @@
+import { Server } from "../server";
 import signale from "signale";
 
+const LOGGER = signale.scope("service");
+
 export class Service {
+  private server: Server;
+
   constructor() {
-    signale.info("Building service");
-    signale.info("Built service");
+    LOGGER.info("Building service");
+    this.server = new Server();
+    LOGGER.info("Built service");
   }
 
-  async start(port: number): Promise<void> {
-    signale.info("Starting service", { port });
+  start(port: number): void {
+    LOGGER.info("Starting service", { port });
+    this.server.start(port);
   }
 }
