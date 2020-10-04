@@ -16,7 +16,7 @@ export class Service {
    */
   constructor() {
     LOGGER.info("Building service");
-    this.server = new Server();
+    this.server = new Server([]);
     LOGGER.info("Built service");
   }
 

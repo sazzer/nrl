@@ -15,6 +15,17 @@ import timeout from "connect-timeout";
 const LOGGER = createLogger("server");
 
 /**
+ * Interface that components can implement to register routes with the HTTP Server
+ */
+export interface Configurer {
+  /**
+   * Register some routes with the server
+   * @param app The Express server with which to register the routes
+   */
+  registerRoutes(app: Express): void;
+}
+
+/**
  * Class representing the HTTP Server
  */
 export class Server {
@@ -24,7 +35,7 @@ export class Server {
   /**
    * Construct the server
    */
-  constructor() {
+  constructor(components: Configurer[]) {
     const app = express();
     app.use(responseTime());
     app.use(timeout("5s"));
@@ -40,9 +51,7 @@ export class Server {
     app.use(cors());
     app.use(helmet());
 
-    app.get("/", (req, res) => {
-      res.json("Hello World!");
-    });
+    components.forEach((c) => c.registerRoutes(app));
 
     this.app = app;
   }
