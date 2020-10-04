@@ -1,7 +1,7 @@
 {
   "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
     "lib": ["es6"],
     "allowJs": true,

@@ -1,6 +1,13 @@
 import "dotenv/config";
 
+import { Service } from "./infrastructure/service";
 import config from "config";
 
-/* eslint-disable */
-console.log(config);
+async function start() {
+  const service = new Service();
+  await service.start(config.get("http.port"));
+}
+
+start().then(() => {
+  // Running
+});
