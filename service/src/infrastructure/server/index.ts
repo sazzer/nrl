@@ -11,11 +11,19 @@ import responseTime from "response-time";
 import rtracer from "cls-rtracer";
 import timeout from "connect-timeout";
 
+/** The logger to use */
 const LOGGER = createLogger("server");
 
+/**
+ * Class representing the HTTP Server
+ */
 export class Server {
+  /** The actual server */
   private app: Express;
 
+  /**
+   * Construct the server
+   */
   constructor() {
     const app = express();
     app.use(responseTime());
@@ -39,6 +47,10 @@ export class Server {
     this.app = app;
   }
 
+  /**
+   * Start the server listening
+   * @param port The port to listen on
+   */
   start(port: number): void {
     LOGGER.info({ port }, "Starting service");
     this.app.listen(port);
