@@ -12,7 +12,7 @@ import rtracer from "cls-rtracer";
 import timeout from "connect-timeout";
 
 /** The logger to use */
-const LOGGER = createLogger("server");
+const LOGGER = createLogger("infrastructure:server");
 
 /**
  * Interface that components can implement to register routes with the HTTP Server

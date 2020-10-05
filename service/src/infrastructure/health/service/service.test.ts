@@ -1,4 +1,4 @@
-import { HealthService } from "./service";
+import { HealthService } from ".";
 
 describe("HealthService", () => {
   test("No components", async () => {

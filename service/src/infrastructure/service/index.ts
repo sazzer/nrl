@@ -3,7 +3,7 @@ import { Server } from "../server";
 import { createLogger } from "../../logger";
 
 /** The logger to use */
-const LOGGER = createLogger("service");
+const LOGGER = createLogger("infrastructure:service");
 
 /**
  * Class representing the entire service
@@ -18,7 +18,7 @@ export class Service {
   constructor() {
     LOGGER.info("Building service");
 
-    const health = new HealthConfig();
+    const health = new HealthConfig({});
 
     this.server = new Server([health]);
 

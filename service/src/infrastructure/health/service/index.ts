@@ -1,7 +1,11 @@
-import { ComponentHealth, SystemHealth, SystemStatus } from "./model";
+import { ComponentHealth, SystemHealth, SystemStatus } from "../model";
 
-import { CheckHealthUseCase } from "./usecases";
-import { Healthchecker } from "./healthchecker";
+import { CheckHealthUseCase } from "../usecases";
+import { Healthchecker } from "../healthchecker";
+import { createLogger } from "../../../logger";
+
+/** The logger to use */
+const LOGGER = createLogger("infrastructure:health:service");
 
 /**
  * The actual health service
@@ -26,6 +30,8 @@ export class HealthService implements CheckHealthUseCase {
     let status: SystemStatus = "HEALTHY";
     const components: { [key: string]: ComponentHealth } = {};
 
+    LOGGER.debug("Checking system health");
+
     Object.entries(this.components).forEach(async ([key, component]) => {
       try {
         await component.checkHealth();
@@ -39,6 +45,8 @@ export class HealthService implements CheckHealthUseCase {
         };
         status = "UNHEALTHY";
       }
+
+      LOGGER.debug({ component: key, status: components[key] }, "Component health");
     });
 
     return {
