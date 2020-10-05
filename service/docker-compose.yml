@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  nrl-dev-postgres:
+    image: postgres:12.4-alpine
+    environment:
+      POSTGRES_DB: nrl
+      POSTGRES_USER: nrl
+      POSTGRES_PASSWORD: nrl
+    ports:
+      - "127.0.0.1:45432:5432"
+    networks:
+      - nrl-dev
+
+networks:
+  nrl-dev:
