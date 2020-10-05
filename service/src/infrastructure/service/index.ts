@@ -1,3 +1,4 @@
+import { Database } from "../database/database";
 import { Express } from "express";
 import { HealthConfig } from "../health/config";
 import { Server } from "../server";
@@ -15,11 +16,14 @@ export class Service {
 
   /**
    * Construct the service
+   * @param databaseUrl The URL to use to connect to the database
    */
-  constructor() {
+  constructor(databaseUrl: string) {
     LOGGER.info("Building service");
 
-    const health = new HealthConfig({});
+    const db = new Database(databaseUrl);
+
+    const health = new HealthConfig({ db });
 
     this.server = new Server([health]);
 

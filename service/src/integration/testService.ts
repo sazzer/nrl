@@ -1,26 +1,23 @@
-import request, { Request } from "supertest";
+import request, { Test } from "supertest";
 
 import { Service } from "../infrastructure/service";
+import { newTestDatabase } from "./testDatabase";
 
-/**
- * Wrapper around the service for testing purposes.
- */
-export class TestService {
-  /** The actual service to test */
-  private service: Service;
+export interface TestService {
+  get(url: string): Test;
+  destroy(): Promise<void>;
+}
 
-  /**
-   * Construct the test service.
-   */
-  constructor() {
-    this.service = new Service();
-  }
+export async function newTestService(): Promise<TestService> {
+  const database = await newTestDatabase();
+  const service = new Service(database.url);
 
-  /**
-   * Make a GET request to the server
-   * @param url The URL to make the request to
-   */
-  async get(url: string): Promise<Request> {
-    return request(this.service._app()).get(url);
-  }
+  return {
+    destroy() {
+      return database.stop();
+    },
+    get(url: string) {
+      return request(service._app()).get(url);
+    },
+  };
 }

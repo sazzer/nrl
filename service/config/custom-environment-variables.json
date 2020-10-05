@@ -1,5 +1,8 @@
 {
   "http": {
     "port": "PORT"
+  },
+  "database": {
+    "url": "DATABASE_URL"
   }
 }

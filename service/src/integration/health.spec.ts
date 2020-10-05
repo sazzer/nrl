@@ -1,15 +1,27 @@
-import { TestService } from "./testService";
+import { TestService, newTestService } from "./testService";
 
-test("GET /health", async () => {
-  const sut = new TestService();
+describe("Health", () => {
+  let sut: TestService;
 
-  const response = await sut.get("/health");
-  expect(response.status).toBe(200);
-  expect(response.type).toEqual("application/json");
-  expect(response.body).toMatchInlineSnapshot(`
-    Object {
-      "components": Object {},
-      "status": "HEALTHY",
-    }
-  `);
+  beforeEach(async () => {
+    sut = await newTestService();
+  });
+
+  afterEach(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 20000));
+
+    await sut.destroy();
+  });
+
+  test("GET /health", async () => {
+    const response = await sut.get("/health");
+    expect(response.status).toBe(200);
+    expect(response.type).toEqual("application/json");
+    expect(response.body).toMatchInlineSnapshot(`
+      Object {
+        "components": Object {},
+        "status": "HEALTHY",
+      }
+    `);
+  });
 });
