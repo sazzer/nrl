@@ -7,7 +7,7 @@ import (
 
 var (
 	// ErrUserNotFound indicates that no user was found with the provided ID.
-	ErrUserNotFound = errors.New("users: not found")
+	ErrUserNotFound = errors.New("users: The requested user was not found")
 )
 
 // GetUserUseCase is the use case used to load a single user by ID.

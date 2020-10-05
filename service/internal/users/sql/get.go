@@ -2,11 +2,11 @@ package sql
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/sazzer/nrl/service/internal/users"
 )
@@ -19,7 +19,9 @@ func (r repository) GetUserByID(ctx context.Context, id users.UserID) (users.Use
 
 	var user user
 	if err := row.StructScan(&user); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		log.Info().Err(err).Msg("Error loading user")
+
+		if errors.Is(err, sql.ErrNoRows) {
 			return users.UserModel{}, users.ErrUserNotFound
 		}
 

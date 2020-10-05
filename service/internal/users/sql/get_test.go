@@ -24,7 +24,7 @@ func TestGetUserByID_UnknownUser(t *testing.T) {
 	_, err := repository.GetUserByID(context.Background(),
 		users.UserID(uuid.MustParse("00000000-0000-0000-0000-000000000000")))
 
-	assert.Equal(t, err, users.ErrUserNotFound)
+	assert.Equal(t, users.ErrUserNotFound, err)
 }
 
 func TestGetUserByID_KnownUser(t *testing.T) {
