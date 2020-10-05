@@ -35,7 +35,7 @@ jobs:
 
       - name: Get the git tag
         run: |
-          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+          echo GIT_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g") >> $GITHUB_ENV
 
       - uses: whoan/docker-build-with-cache-action@v5
         with:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Get the git tag
         run: |
-          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+          echo GIT_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g") >> $GITHUB_ENV
 
       - name: Docker login
         env:
@@ -87,7 +87,7 @@ jobs:
     steps:
       - name: Get the git tag
         run: |
-          echo ::set-env name=GIT_TAG::$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g")
+          echo GIT_TAG=$(echo ${GITHUB_REF} | sed -e "s/refs\/.*\///g") >> $GITHUB_ENV
 
       - name: Login to Heroku Container registry
         env:
