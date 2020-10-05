@@ -32,7 +32,10 @@ export class HealthService implements CheckHealthUseCase {
 
     LOGGER.debug("Checking system health");
 
-    Object.entries(this.components).forEach(async ([key, component]) => {
+    for (const entry of Object.entries(this.components)) {
+      const key = entry[0];
+      const component = entry[1];
+
       try {
         await component.checkHealth();
         components[key] = {
@@ -47,7 +50,7 @@ export class HealthService implements CheckHealthUseCase {
       }
 
       LOGGER.debug({ component: key, status: components[key] }, "Component health");
-    });
+    }
 
     return {
       status,

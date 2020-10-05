@@ -49,7 +49,7 @@ describe("HealthService", () => {
             "status": "UNHEALTHY",
           },
         },
-        "status": "HEALTHY",
+        "status": "UNHEALTHY",
       }
     `);
   });
@@ -76,7 +76,7 @@ describe("HealthService", () => {
             "status": "UNHEALTHY",
           },
         },
-        "status": "HEALTHY",
+        "status": "UNHEALTHY",
       }
     `);
   });
