@@ -11,7 +11,8 @@
     "start": "ts-node ./src/index.ts | pino-pretty",
     "build:compile": "tsc",
     "build": "run-s clean build:compile",
-    "test": "jest"
+    "test": "jest --testPathPattern .test.ts",
+    "integration": "jest --testPathPattern .spec.ts"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -42,6 +43,7 @@
     "@types/pino": "^6.3.2",
     "@types/pino-http": "^5.0.5",
     "@types/response-time": "^2.3.4",
+    "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "eslint": "^7.10.0",
@@ -53,6 +55,7 @@
     "pino-pretty": "^4.2.1",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
+    "supertest": "^5.0.0",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"

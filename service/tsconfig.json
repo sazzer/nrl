@@ -1,5 +1,5 @@
 {
-  "exclude": ["src/**/*.test.ts", "output/**/*.js"],
+  "exclude": ["src/**/*.test.ts", "src/integration/**/*.ts", "output/**/*.js"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",

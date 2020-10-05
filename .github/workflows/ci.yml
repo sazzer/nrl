@@ -26,6 +26,10 @@ jobs:
         working-directory: service
         run: npm test
 
+      - name: Integration Test
+        working-directory: service
+        run: npm run integration
+
   build-service-container:
     runs-on: ubuntu-latest
     steps:

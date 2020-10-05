@@ -67,4 +67,11 @@ export class Server {
     LOGGER.info({ port }, "Starting service");
     this.app.listen(port);
   }
+
+  /**
+   * Get the Express app, for the purposes of integration testing.
+   */
+  _app(): Express {
+    return this.app;
+  }
 }
