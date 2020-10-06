@@ -2,6 +2,7 @@ package sql
 
 import (
 	"encoding/json"
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -42,6 +43,22 @@ func (u user) UserModel() users.UserModel {
 			DisplayName: authentication.DisplayName,
 		}
 	}
+
+	sort.Slice(realAuthentications, func(a, b int) bool {
+		if realAuthentications[a].ProviderID < realAuthentications[b].ProviderID {
+			return true
+		} else if realAuthentications[a].ProviderID > realAuthentications[b].ProviderID {
+			return false
+		}
+
+		if realAuthentications[a].UserID < realAuthentications[b].UserID {
+			return true
+		} else if realAuthentications[a].UserID > realAuthentications[b].UserID {
+			return false
+		}
+
+		return realAuthentications[a].DisplayName < realAuthentications[b].DisplayName
+	})
 
 	return users.UserModel{
 		ID:      users.UserID(uuid.MustParse(u.UserID)),

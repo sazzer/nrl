@@ -55,8 +55,8 @@ func TestGetUserByID_KnownUser(t *testing.T) {
 
 func TestGetUserByID_KnownUserWithAuthentications(t *testing.T) {
 	seedUser := data.NewUser()
-	seedUser.WithAuthentication("google", "googleId", "Google User")
 	seedUser.WithAuthentication("twitter", "twitterId", "Twitter User")
+	seedUser.WithAuthentication("google", "googleId", "Google User")
 
 	db := testdatabase.New(t)
 	defer db.Close(t)
