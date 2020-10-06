@@ -52,3 +52,36 @@ func TestGetUserByID_KnownUser(t *testing.T) {
 	assert.Equal(t, seedUser.DisplayName, user.DisplayName)
 	assert.Equal(t, []users.Authentication{}, user.Authentications)
 }
+
+func TestGetUserByID_KnownUserWithAuthentications(t *testing.T) {
+	seedUser := data.NewUser()
+	seedUser.WithAuthentication("google", "googleId", "Google User")
+	seedUser.WithAuthentication("twitter", "twitterId", "Twitter User")
+
+	db := testdatabase.New(t)
+	defer db.Close(t)
+
+	database := database.New(db.URL(t))
+
+	db.Seed(t, seedUser)
+
+	repository := sql.New(database)
+
+	user, err := repository.GetUserByID(context.Background(), users.UserID(seedUser.UserID))
+
+	assert.NoError(t, err)
+
+	assert.Equal(t, users.UserID(seedUser.UserID), user.ID)
+	assert.Equal(t, seedUser.Version, user.Version)
+	assert.Equal(t, seedUser.Created, user.Created)
+	assert.Equal(t, seedUser.Updated, user.Updated)
+
+	assert.Equal(t, users.Email(seedUser.Email), user.Email)
+	assert.Equal(t, seedUser.DisplayName, user.DisplayName)
+
+	expectedAuthentications := []users.Authentication{
+		users.Authentication{ProviderID: "google", UserID: "googleId", DisplayName: "Google User"},
+		users.Authentication{ProviderID: "twitter", UserID: "twitterId", DisplayName: "Twitter User"},
+	}
+	assert.Equal(t, expectedAuthentications, user.Authentications)
+}
