@@ -1,3 +1,7 @@
+mod infrastructure;
+
 pub async fn main() {
-    println!("Hello, world!");
+    let service = infrastructure::service::Service::new();
+
+    service.start(8000).await;
 }
