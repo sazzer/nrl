@@ -29,12 +29,15 @@ type authentication struct {
 	DisplayName string `json:"display_name"`
 }
 
+// Convert the database record into an API UserModel.
 func (u user) UserModel() users.UserModel {
+	// Parse the JSONB String into the correct structure.
 	var authentications []authentication
 	if err := json.Unmarshal(u.Authentications, &authentications); err != nil {
 		log.Error().Err(err).Interface("authentications", u.Authentications).Msg("Failed to parse Authentications JSON")
 	}
 
+	// Transform the structure into the API versions.
 	realAuthentications := make([]users.Authentication, len(authentications))
 	for i, authentication := range authentications {
 		realAuthentications[i] = users.Authentication{
@@ -44,6 +47,7 @@ func (u user) UserModel() users.UserModel {
 		}
 	}
 
+	// Sort the authentications, first by Provider ID then User ID.
 	sort.Slice(realAuthentications, func(a, b int) bool {
 		if realAuthentications[a].ProviderID < realAuthentications[b].ProviderID {
 			return true
@@ -60,6 +64,7 @@ func (u user) UserModel() users.UserModel {
 		return realAuthentications[a].DisplayName < realAuthentications[b].DisplayName
 	})
 
+	// And finally build the API UserModel from the data we've got.
 	return users.UserModel{
 		ID:      users.UserID(uuid.MustParse(u.UserID)),
 		Version: uuid.MustParse(u.Version),
