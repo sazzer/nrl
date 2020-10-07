@@ -1,0 +1,15 @@
+[package]
+name = "nrl"
+version = "0.1.0"
+authors = ["Graham Cox <graham@grahamcox.co.uk>"]
+edition = "2018"
+
+[lib]
+name = "nrl_lib"
+
+[[bin]]
+name = "nrl"
+
+[dependencies]
+
+[devDependencies]
