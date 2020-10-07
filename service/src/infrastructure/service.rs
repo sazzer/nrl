@@ -11,5 +11,7 @@ impl Service {
     ///
     /// # Parameters
     /// - `port` - The port to listen on.
-    pub async fn start(self, _port: u16) {}
+    pub async fn start(self, port: u16) {
+        tracing::info!(port = port, "Starting NRL");
+    }
 }
