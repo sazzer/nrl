@@ -7,8 +7,9 @@ pub struct Service {
 
 impl Service {
     /// Create a new instance of the Service that's ready for use.
-    pub const fn new() -> Self {
-        let server = Server::new();
+    #[must_use]
+    pub fn new() -> Self {
+        let server = Server::new(vec![]);
 
         Self { server }
     }
