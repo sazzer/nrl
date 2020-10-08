@@ -1,3 +1,3 @@
 mod infrastructure;
 
-pub use infrastructure::service::Service;
+pub use infrastructure::service::{Service, ServiceSettings};

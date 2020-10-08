@@ -1,2 +1,3 @@
-pub mod service;
+mod health;
 mod server;
+pub mod service;

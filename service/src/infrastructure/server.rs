@@ -3,12 +3,21 @@ use actix_web::{http::header, middleware::Logger, web::ServiceConfig, App, HttpS
 use std::{ops::Deref, sync::Arc};
 
 /// A function that is able to contribute configuration to the Actix server when it is being constructed.
-pub type ServerConfig = Arc<dyn Fn(&mut ServiceConfig) + Send + Sync>;
+type FnConfig = Arc<dyn Fn(&mut ServiceConfig) + Send + Sync>;
+
+/// Trait that components can implement to contribute configuration to the HTTP server.
+pub trait ServerConfig {
+    /// Configure the HTTP Server.
+    ///
+    /// # Parameters
+    /// - `config` - The Actix `ServiceConfig` object to configure
+    fn configure(&self, config: &mut ServiceConfig);
+}
 
 /// Wrapper around the HTTP Server.
 pub struct Server {
     /// The set of configuration traits for the HTTP server.
-    configs: Vec<ServerConfig>,
+    configs: Vec<FnConfig>,
 }
 
 impl Server {
@@ -20,7 +29,18 @@ impl Server {
     /// # Returns
     /// The wrapper around the HTTP Server.
     #[must_use]
-    pub fn new(configs: Vec<ServerConfig>) -> Self {
+    pub fn new() -> Self {
+        Self { configs: vec![] }
+    }
+
+    /// Add a new configuration to the server
+    ///
+    /// # Parameters
+    /// -
+    pub fn with_config(self, c: Arc<dyn ServerConfig + Send + Sync>) -> Self {
+        let mut configs = self.configs;
+        configs.push(Arc::new(move |app| c.configure(app)));
+
         Self { configs }
     }
 

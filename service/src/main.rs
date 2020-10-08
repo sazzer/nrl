@@ -22,6 +22,12 @@ impl Default for Settings {
     }
 }
 
+impl Into<nrl_lib::ServiceSettings> for Settings {
+    fn into(self) -> nrl_lib::ServiceSettings {
+        nrl_lib::ServiceSettings {}
+    }
+}
+
 #[actix_rt::main]
 async fn main() {
     dotenv::dotenv().ok();
@@ -30,7 +36,8 @@ async fn main() {
     let settings = Settings::default();
     tracing::debug!(settings = ?settings, "Loaded settings");
 
-    let service = nrl_lib::Service::new();
+    let port = settings.port.unwrap_or(8000);
+    let service = nrl_lib::Service::new(&settings.into());
 
-    service.start(settings.port.unwrap_or(8000)).await;
+    service.start(port).await;
 }
