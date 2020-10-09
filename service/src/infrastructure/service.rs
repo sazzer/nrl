@@ -1,4 +1,6 @@
 use super::server::Server;
+use crate::infrastructure::health;
+use std::collections::HashMap;
 use std::sync::Arc;
 
 /// The actual service layer that does the real work.
@@ -19,7 +21,9 @@ impl Service {
     /// The service, ready to work with.
     #[must_use]
     pub fn new(_settings: &ServiceSettings) -> Self {
-        let health = Arc::new(crate::infrastructure::health::Config::default());
+        let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
+        health_components.insert("db".to_owned(), Arc::new(health::ComponentHealth::Healthy));
+        let health = Arc::new(health::Config::new(health_components));
 
         let server = Server::new().with_config(health);
 
