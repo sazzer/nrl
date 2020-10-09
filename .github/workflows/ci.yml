@@ -6,27 +6,54 @@ on:
 jobs:
   test-service:
     runs-on: ubuntu-latest
+    env:
+      RUST_TOOLCHAIN: stable
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/setup-go@v2
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          go-version: "^1.15"
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          override: true
+          components: clippy
 
-      - name: Lint
-        uses: golangci/golangci-lint-action@v1
+      - name: Cache cargo registry
+        uses: actions/cache@v1
         with:
-          version: v1.30
-          working-directory: service
+          path: ~/.cargo/registry
+          key: cargo-registry-${{ runner.os }}-${{ hashFiles('service/Cargo.lock') }}
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: cargo-index-${{ runner.os }}-${{ hashFiles('service/Cargo.lock') }}
+      - name: Cache cargo build
+        uses: actions/cache@v1
+        with:
+          path: service/target
+          key: cargo-build-target-${{ runner.os }}-${{ hashFiles('service/Cargo.lock') }}
 
-      - name: Unit Test
-        working-directory: service
-        run: go test ./internal/...
+      - name: Run cargo check
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --manifest-path service/Cargo.toml
 
-      - name: Integration Test
-        working-directory: service
-        run: go test ./tests/...
+      - name: Run clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          args: --manifest-path service/Cargo.toml --lib --tests --all-features -- -D clippy::all -D clippy::pedantic -D clippy::nursery -A clippy::module_name_repetitions -A clippy::future-not-send
+
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path service/Cargo.toml
 
   build-service-container:
     runs-on: ubuntu-latest
