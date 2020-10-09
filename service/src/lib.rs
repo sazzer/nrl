@@ -1,3 +1,6 @@
 mod infrastructure;
 
-pub use infrastructure::service::{Service, ServiceSettings};
+pub use infrastructure::{
+    service::{Service, ServiceSettings},
+    testing::TestResponse,
+};

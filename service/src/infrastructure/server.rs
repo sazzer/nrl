@@ -17,7 +17,7 @@ pub trait ServerConfig {
 /// Wrapper around the HTTP Server.
 pub struct Server {
     /// The set of configuration traits for the HTTP server.
-    configs: Vec<FnConfig>,
+    pub(super) configs: Vec<FnConfig>,
 }
 
 impl Server {

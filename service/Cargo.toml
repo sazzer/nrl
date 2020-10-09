@@ -25,7 +25,9 @@ tracing-futures = "0.2.4"
 tracing-log = "0.1.1"
 tracing-subscriber = "0.2.12"
 async-trait = "0.1.41"
-serde_json = "1.0.58"
+serde_json = { version = "1.0.58", features = ["preserve_order"] }
+bytes = "0.5.6"
 
 [dev-dependencies]
 assert2 = "0.3.3"
+insta = {version = "1.0.0", features=["redactions"] }

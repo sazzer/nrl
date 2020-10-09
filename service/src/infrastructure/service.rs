@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 /// The actual service layer that does the real work.
 pub struct Service {
-    server: Server,
+    pub(super) server: Server,
 }
 
 /// The settings needed for the service to work.
@@ -21,11 +21,14 @@ impl Service {
     /// The service, ready to work with.
     #[must_use]
     pub fn new(_settings: &ServiceSettings) -> Self {
+        tracing::debug!("Building service");
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
         health_components.insert("db".to_owned(), Arc::new(health::ComponentHealth::Healthy));
         let health = Arc::new(health::Config::new(health_components));
 
         let server = Server::new().with_config(health);
+
+        tracing::debug!("Finished building service");
 
         Self { server }
     }
