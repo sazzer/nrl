@@ -1,5 +1,5 @@
 mod postgres;
+mod server;
 mod testdatabase;
-mod testserver;
 
-pub use testserver::TestServer;
+pub use server::TestServer;

@@ -6,6 +6,9 @@ use serde::Deserialize;
 struct Settings {
     /// The port on which the HTTP server should listen on
     pub port: Option<u16>,
+
+    /// The URL to connect to the database with
+    pub database_url: String,
 }
 
 impl Default for Settings {
@@ -24,7 +27,9 @@ impl Default for Settings {
 
 impl Into<nrl_lib::ServiceSettings> for Settings {
     fn into(self) -> nrl_lib::ServiceSettings {
-        nrl_lib::ServiceSettings {}
+        nrl_lib::ServiceSettings {
+            database_url: self.database_url,
+        }
     }
 }
 

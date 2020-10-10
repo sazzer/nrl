@@ -1,3 +1,4 @@
+mod database;
 mod health;
 mod server;
 pub mod service;
