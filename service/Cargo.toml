@@ -23,6 +23,7 @@ deadpool-postgres = "0.5.6"
 dotenv = "0.15.0"
 futures = "0.3.6"
 log = "0.4.11"
+rust-embed = "5.6.0"
 serde = { version = "1.0.116", features = ["derive"] }
 serde_json = { version = "1.0.58", features = ["preserve_order"] }
 tokio-postgres = "0.5.5"

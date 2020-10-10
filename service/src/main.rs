@@ -42,7 +42,7 @@ async fn main() {
     tracing::debug!(settings = ?settings, "Loaded settings");
 
     let port = settings.port.unwrap_or(8000);
-    let service = nrl_lib::Service::new(&settings.into());
+    let service = nrl_lib::Service::new(&settings.into()).await;
 
     service.start(port).await;
 }

@@ -1,4 +1,4 @@
-use super::{database::Database, server::Server};
+use super::{database, server::Server};
 use crate::infrastructure::health;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -23,14 +23,14 @@ impl Service {
     ///
     /// # Returns
     /// The service, ready to work with.
-    #[must_use]
-    pub fn new(settings: &ServiceSettings) -> Self {
+    pub async fn new(settings: &ServiceSettings) -> Self {
         tracing::debug!(settings = ?settings, "Building service");
 
-        let database = Arc::new(Database::new(&settings.database_url));
+        let db = Arc::new(database::Database::new(&settings.database_url));
+        database::migrations::migrate(&db).await;
 
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
-        health_components.insert("db".to_owned(), database);
+        health_components.insert("db".to_owned(), db);
         let health = Arc::new(health::Config::new(health_components));
 
         let server = Server::new().with_config(health);

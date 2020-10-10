@@ -19,7 +19,7 @@ impl TestServer {
         let settings = ServiceSettings {
             database_url: database.url.clone(),
         };
-        let service = Service::new(&settings);
+        let service = Service::new(&settings).await;
 
         Self { service, database }
     }
