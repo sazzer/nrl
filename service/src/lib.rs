@@ -1,3 +1,4 @@
+pub(crate) mod authorization;
 mod infrastructure;
 
 pub use infrastructure::{
