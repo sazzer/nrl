@@ -19,6 +19,7 @@ RUN find /nrl/target -name "*nrl*" | xargs rm -rf
 # Finally, we do a full build of our code
 RUN rm -rf /nrl/src
 COPY src /nrl/src
+COPY migrations /nrl/migrations
 RUN cargo build --release
 
 
