@@ -27,6 +27,7 @@ log = "0.4.11"
 rust-embed = "5.6.0"
 serde = { version = "1.0.116", features = ["derive"] }
 serde_json = { version = "1.0.58", features = ["preserve_order"] }
+thiserror = "1.0.21"
 tokio-postgres = "0.5.5"
 tracing = "0.1.21"
 tracing-futures = "0.2.4"

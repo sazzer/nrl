@@ -1336,6 +1336,7 @@ dependencies = [
  "serde 1.0.116",
  "serde_json",
  "testcontainers",
+ "thiserror",
  "tokio-postgres",
  "tracing",
  "tracing-futures",
