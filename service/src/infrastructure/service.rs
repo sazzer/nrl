@@ -29,6 +29,8 @@ impl Service {
         let db = Arc::new(database::Database::new(&settings.database_url));
         database::migrations::migrate(&db).await;
 
+        let _authorization = crate::authorization::config::Config::new();
+
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
         health_components.insert("db".to_owned(), db);
         let health = Arc::new(health::Config::new(health_components));

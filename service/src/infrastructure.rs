@@ -1,5 +1,5 @@
 mod database;
 mod health;
-mod server;
+pub mod server;
 pub mod service;
 pub mod testing;
