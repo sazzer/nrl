@@ -18,8 +18,14 @@ pub trait GenerateSecurityContextUseCase {
 }
 
 /// Errors that can occur when authorizing a security context
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, PartialEq)]
 pub enum AuthorizeError {
+    #[error("The token has expired")]
+    Expired,
+    #[error("The token was malformed")]
+    Malformed,
+    #[error("The token was missing a principal")]
+    MissingPrincipal,
     #[error("An unknown error occurred")]
     UnknownError,
 }

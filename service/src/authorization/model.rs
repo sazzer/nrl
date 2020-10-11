@@ -9,17 +9,17 @@ pub enum Principal {
 }
 
 /// The ID of a Security Context.
-#[derive(Debug)]
-pub struct SecurityContextId(pub(super) Uuid);
+#[derive(Debug, PartialEq)]
+pub struct SecurityContextId(pub(super) String);
 
 impl Default for SecurityContextId {
     fn default() -> Self {
-        Self(Uuid::new_v4())
+        Self(Uuid::new_v4().to_string())
     }
 }
 
 /// A `SecurityContext` represents some authorization credentials issued to some principal.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct SecurityContext {
     /// The ID of the security context
     pub id: SecurityContextId,
@@ -32,4 +32,5 @@ pub struct SecurityContext {
 }
 
 /// A `SignedSecurityContext` represents a security context that has been securely signed.
+#[derive(Debug)]
 pub struct SignedSecurityContext(pub(super) String);
