@@ -23,6 +23,7 @@ deadpool = "0.5.2"
 deadpool-postgres = "0.5.6"
 dotenv = "0.15.0"
 futures = "0.3.6"
+jsonwebtoken = "7.2.0"
 log = "0.4.11"
 rust-embed = "5.6.0"
 serde = { version = "1.0.116", features = ["derive"] }
@@ -33,6 +34,7 @@ tracing = "0.1.21"
 tracing-futures = "0.2.4"
 tracing-log = "0.1.1"
 tracing-subscriber = "0.2.12"
+uuid = {version = "0.8.1", features = ["v4"] }
 
 [dev-dependencies]
 assert2 = "0.3.3"

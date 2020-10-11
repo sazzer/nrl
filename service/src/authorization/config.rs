@@ -1,8 +1,10 @@
 use super::{
-    service::AuthorizationService, AuthorizeSecurityContextUseCase, GenerateSecurityContextUseCase,
+    service::{AuthorizationService, SigningKey},
+    AuthorizeSecurityContextUseCase, GenerateSecurityContextUseCase,
 };
 use crate::infrastructure::server::ServerConfig;
 use actix_web::web;
+use chrono::Duration;
 use std::sync::Arc;
 
 /// Configuration for the authorization component.
@@ -13,8 +15,11 @@ pub struct Config {
 impl Config {
     /// Create a new health component.
     pub fn new() -> Self {
+        let duration = Duration::days(365);
+        let signing_key = SigningKey::new("Hello");
+
         Self {
-            service: Arc::new(AuthorizationService::new()),
+            service: Arc::new(AuthorizationService::new(duration, signing_key)),
         }
     }
 }
