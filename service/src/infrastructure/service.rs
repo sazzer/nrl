@@ -29,13 +29,18 @@ impl Service {
         let db = Arc::new(database::Database::new(&settings.database_url));
         database::migrations::migrate(&db).await;
 
-        let _authorization = crate::authorization::config::Config::new();
+        let authorization = Arc::new(crate::authorization::config::Config::new());
+
+        let users = Arc::new(crate::users::config::Config::new(db.clone()));
 
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
         health_components.insert("db".to_owned(), db);
         let health = Arc::new(health::Config::new(health_components));
 
-        let server = Server::new().with_config(health);
+        let server = Server::new()
+            .with_config(health)
+            .with_config(authorization)
+            .with_config(users);
 
         tracing::debug!("Finished building service");
 

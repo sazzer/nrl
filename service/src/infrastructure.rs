@@ -1,4 +1,4 @@
-mod database;
+pub mod database;
 mod health;
 pub mod server;
 pub mod service;
