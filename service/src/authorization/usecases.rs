@@ -1,8 +1,6 @@
 use super::{Principal, SecurityContext, SignedSecurityContext};
-use async_trait::async_trait;
 
 /// The `GenerateSecurityContextUseCase` use case will generate a valid `SecurityContext` for a provided `Principal`
-#[async_trait]
 pub trait GenerateSecurityContextUseCase {
     /// Generate a new security context for the provided principal.
     ///
@@ -32,7 +30,6 @@ pub enum AuthorizeError {
 
 /// The `AuthorizeSecurityContextUseCase` use case will assert that a signed security context is valid and return the
 /// parsed version if so
-#[async_trait]
 pub trait AuthorizeSecurityContextUseCase {
     /// Authorize that the provided security context is valid and return the decoded version.
     ///

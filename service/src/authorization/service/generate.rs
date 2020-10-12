@@ -3,11 +3,9 @@ use crate::authorization::{
     GenerateSecurityContextUseCase, Principal, SecurityContext, SecurityContextId,
     SignedSecurityContext,
 };
-use async_trait::async_trait;
 use chrono::{Timelike, Utc};
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 
-#[async_trait]
 impl GenerateSecurityContextUseCase for AuthorizationService {
     /// Generate a new security context for the provided principal.
     ///

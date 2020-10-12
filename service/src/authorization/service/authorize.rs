@@ -2,12 +2,10 @@ use crate::authorization::{
     service::{claims::SecurityContextClaims, AuthorizationService},
     AuthorizeError, AuthorizeSecurityContextUseCase, SecurityContext, SignedSecurityContext,
 };
-use async_trait::async_trait;
 use jsonwebtoken::{decode, Algorithm, DecodingKey, Validation};
 use std::collections::HashSet;
 use std::convert::TryInto;
 
-#[async_trait]
 impl AuthorizeSecurityContextUseCase for AuthorizationService {
     /// Authorize that the provided security context is valid and return the decoded version.
     ///
