@@ -1,9 +1,12 @@
+mod get;
+mod model;
+
 use crate::infrastructure::database::Database;
 use std::sync::Arc;
 
 /// Repository of users data.
 pub struct UsersRepository {
-    _database: Arc<Database>,
+    database: Arc<Database>,
 }
 
 impl UsersRepository {
@@ -12,8 +15,6 @@ impl UsersRepository {
     /// # Parameters
     /// - `database` - The database connection
     pub fn new(database: Arc<Database>) -> Self {
-        Self {
-            _database: database,
-        }
+        Self { database }
     }
 }
