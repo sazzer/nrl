@@ -1354,13 +1354,12 @@ dependencies = [
  "futures",
  "insta",
  "jsonwebtoken",
- "lazy_static",
  "log",
+ "nrl_testdatabase",
  "postgres-types",
  "rust-embed",
  "serde 1.0.116",
  "serde_json",
- "testcontainers",
  "thiserror",
  "tokio-postgres",
  "tracing",
@@ -1368,6 +1367,15 @@ dependencies = [
  "tracing-log",
  "tracing-subscriber",
  "uuid",
+]
+
+[[package]]
+name = "nrl_testdatabase"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "testcontainers",
+ "tracing",
 ]
 
 [[package]]

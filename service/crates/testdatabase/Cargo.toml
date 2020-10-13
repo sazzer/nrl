@@ -1,0 +1,10 @@
+[package]
+name = "nrl_testdatabase"
+version = "0.1.0"
+authors = ["Graham Cox <graham@grahamcox.co.uk>"]
+edition = "2018"
+
+[dependencies]
+testcontainers = "0.11.0"
+tracing = "0.1.21"
+lazy_static = "1.4.0"

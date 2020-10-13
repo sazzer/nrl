@@ -8,6 +8,7 @@ WORKDIR /nrl
 
 # We do a non-code build to get all the dependencies. This allows us to benefit from layer caching
 COPY Cargo.lock Cargo.toml /nrl/
+COPY crates /nrl/crates/
 RUN mkdir /nrl/src
 RUN touch /nrl/src/lib.rs
 RUN echo "fn main() {}" > /nrl/src/main.rs

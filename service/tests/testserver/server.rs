@@ -1,6 +1,6 @@
-use super::testdatabase::TestDatabase;
 use actix_http::Request;
 use nrl_lib::{Service, ServiceSettings, TestResponse};
+use nrl_testdatabase::TestDatabase;
 
 /// The test server with which to perform integration tests.
 pub struct TestServer {
