@@ -83,3 +83,19 @@ impl UsersRepository {
         row
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::testing::TestDatabase;
+    use assert2::check;
+
+    #[actix_rt::test]
+    async fn test_get_by_id_unknown_user() {
+        let db = TestDatabase::new().await;
+        let sut = UsersRepository::new(db.database);
+
+        let result = sut.get_user_by_id(UserID::default()).await;
+        check!(result.is_none());
+    }
+}
