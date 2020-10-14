@@ -120,6 +120,9 @@ mod tests {
         check!(user.identity.created == seed_user.created);
         check!(user.identity.updated == seed_user.updated);
 
+        check!(user.data.username == Some(seed_user.username.parse().unwrap()));
+        check!(user.data.email == Some(seed_user.email.parse().unwrap()));
+        check!(user.data.display_name == seed_user.display_name.parse().unwrap());
         check!(user.data.authentications == vec![]);
     }
 }

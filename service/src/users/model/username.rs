@@ -1,9 +1,27 @@
 use bytes::BytesMut;
 use postgres_types::{accepts, to_sql_checked, FromSql, IsNull, ToSql, Type};
+use std::str::FromStr;
 
 /// The username of the user.
 #[derive(Debug, PartialEq, FromSql)]
 pub struct Username(String);
+
+#[derive(Debug, PartialEq, thiserror::Error)]
+pub enum UsernameParseError {
+    #[error("The username must not be blank")]
+    Blank,
+}
+
+impl FromStr for Username {
+    type Err = UsernameParseError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value.trim() {
+            "" => Err(UsernameParseError::Blank),
+            value => Ok(Username(value.to_owned())),
+        }
+    }
+}
 
 impl ToSql for Username {
     accepts!(TEXT, VARCHAR);
@@ -16,5 +34,25 @@ impl ToSql for Username {
         w: &mut BytesMut,
     ) -> Result<IsNull, Box<dyn std::error::Error + Sync + Send>> {
         self.0.to_sql(t, w)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use assert2::check;
+
+    #[test]
+    fn test_parse_success() {
+        check!(Ok(Username("hello".to_owned())) == "hello".parse());
+        check!(Ok(Username("hello".to_owned())) == "  hello".parse());
+        check!(Ok(Username("hello".to_owned())) == "hello  ".parse());
+        check!(Ok(Username("hello".to_owned())) == "  hello  ".parse());
+    }
+
+    #[test]
+    fn test_parse_blank() {
+        check!(Err(UsernameParseError::Blank) == "".parse::<Username>());
+        check!(Err(UsernameParseError::Blank) == "  ".parse::<Username>());
     }
 }
