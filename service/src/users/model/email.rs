@@ -17,8 +17,8 @@ impl FromStr for Email {
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value.trim() {
-            "" => Err(EmailParseError::Blank),
-            value => Ok(Email(value.to_owned())),
+            "" => Err(Self::Err::Blank),
+            value => Ok(Self(value.to_owned())),
         }
     }
 }

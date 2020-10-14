@@ -17,8 +17,8 @@ impl FromStr for DisplayName {
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value.trim() {
-            "" => Err(DisplayNameParseError::Blank),
-            value => Ok(DisplayName(value.to_owned())),
+            "" => Err(Self::Err::Blank),
+            value => Ok(Self(value.to_owned())),
         }
     }
 }
