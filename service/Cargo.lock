@@ -1373,9 +1373,18 @@ dependencies = [
 name = "nrl_testdatabase"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
+ "chrono",
+ "deadpool",
+ "deadpool-postgres",
  "lazy_static",
+ "postgres-types",
+ "serde 1.0.116",
+ "serde_json",
  "testcontainers",
+ "tokio-postgres",
  "tracing",
+ "uuid",
 ]
 
 [[package]]

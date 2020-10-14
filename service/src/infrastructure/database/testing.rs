@@ -1,4 +1,5 @@
 use super::{migrations::migrate, Database};
+use nrl_testdatabase::seeddata::SeedData;
 use std::sync::Arc;
 
 /// Wrapper around the Postgres test database and the NRL Database connection
@@ -20,5 +21,14 @@ impl TestDatabase {
             container,
             db: Arc::new(db),
         }
+    }
+
+    /// Seed some data into the database
+    ///
+    /// # Parameters
+    /// - `data` - The data to seed
+    pub async fn seed(&self, data: &dyn SeedData) -> &Self {
+        self.container.seed(data).await;
+        self
     }
 }

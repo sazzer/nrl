@@ -12,6 +12,12 @@ impl Default for UserID {
     }
 }
 
+impl From<Uuid> for UserID {
+    fn from(value: Uuid) -> Self {
+        Self(value)
+    }
+}
+
 impl ToSql for UserID {
     accepts!(UUID);
 
