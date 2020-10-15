@@ -30,7 +30,7 @@ impl FromStr for UserID {
     type Err = UserIDParseError;
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        Uuid::from_str(value).map(UserID::from).map_err(|e| {
+        Uuid::from_str(value).map(Self::from).map_err(|e| {
             tracing::warn!(e = ?e, "Malformed User ID");
             UserIDParseError::Malformed
         })
