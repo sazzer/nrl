@@ -1,9 +1,11 @@
 use bytes::BytesMut;
 use postgres_types::{accepts, to_sql_checked, FromSql, IsNull, ToSql, Type};
+use serde::Serialize;
+use std::str::FromStr;
 use uuid::Uuid;
 
 /// The actual ID of the user resource.
-#[derive(Debug, PartialEq, FromSql)]
+#[derive(Debug, PartialEq, FromSql, Serialize)]
 pub struct UserID(Uuid);
 
 impl Default for UserID {
@@ -15,6 +17,23 @@ impl Default for UserID {
 impl From<Uuid> for UserID {
     fn from(value: Uuid) -> Self {
         Self(value)
+    }
+}
+
+#[derive(Debug, PartialEq, thiserror::Error)]
+pub enum UserIDParseError {
+    #[error("The user ID is not well formed")]
+    Malformed,
+}
+
+impl FromStr for UserID {
+    type Err = UserIDParseError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        Uuid::from_str(value).map(UserID::from).map_err(|e| {
+            tracing::warn!(e = ?e, "Malformed User ID");
+            UserIDParseError::Malformed
+        })
     }
 }
 

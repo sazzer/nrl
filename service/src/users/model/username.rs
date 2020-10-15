@@ -1,9 +1,10 @@
 use bytes::BytesMut;
 use postgres_types::{accepts, to_sql_checked, FromSql, IsNull, ToSql, Type};
+use serde::Serialize;
 use std::str::FromStr;
 
 /// The username of the user.
-#[derive(Debug, PartialEq, FromSql)]
+#[derive(Debug, PartialEq, FromSql, Serialize)]
 pub struct Username(String);
 
 #[derive(Debug, PartialEq, thiserror::Error)]

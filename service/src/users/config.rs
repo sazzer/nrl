@@ -6,14 +6,14 @@ use std::sync::Arc;
 
 /// Configuration for the users component.
 pub struct Config {
-    _service: Arc<UsersService>,
+    service: Arc<UsersService>,
 }
 
 impl Config {
     /// Create a new health component.
     pub fn new(database: Arc<Database>) -> Self {
         Self {
-            _service: Arc::new(UsersService::new(UsersRepository::new(database))),
+            service: Arc::new(UsersService::new(UsersRepository::new(database))),
         }
     }
 }
@@ -23,5 +23,11 @@ impl ServerConfig for Config {
     ///
     /// # Parameters
     /// - `config` - The Actix `ServiceConfig` object to configure
-    fn configure(&self, _config: &mut web::ServiceConfig) {}
+    fn configure(&self, config: &mut web::ServiceConfig) {
+        config.data(self.service.clone());
+
+        config.service(
+            web::resource("/users/{id}").route(web::get().to(super::endpoints::get_user_by_id)),
+        );
+    }
 }
