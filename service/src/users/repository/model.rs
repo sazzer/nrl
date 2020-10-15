@@ -5,7 +5,10 @@ use tokio_postgres::Row;
 impl From<Row> for UserModel {
     fn from(row: Row) -> Self {
         let authentications: Vec<Authentication> =
-            serde_json::from_value(row.get("authentications")).unwrap();
+            serde_json::from_value(row.get("authentications")).unwrap_or_else(|e| {
+                tracing::error!(e = ?e, "Failed to parse authentications");
+                vec![]
+            });
 
         Self {
             identity: Identity {
