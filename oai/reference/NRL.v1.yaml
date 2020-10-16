@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: NRL
+  version: '1.0'
+  contact:
+    name: Graham Cox
+    email: graham@grahamcox.co.uk
+servers:
+  - url: 'http://localhost:8000'
+    description: Local
+paths:
+  /health:
+    get:
+      summary: Healthchecks
+      tags:
+        - health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health-System'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health-System'
+      operationId: get-health
+      description: Check the health of the system
+components:
+  schemas:
+    Health-System:
+      title: Health
+      type: object
+      properties:
+        healthy:
+          type: boolean
+        components:
+          type: object
+          required:
+            - db
+          properties:
+            db:
+              $ref: '#/components/schemas/Health-Component'
+      required:
+        - healthy
+        - components
+      x-examples:
+        Healthy System:
+          healthy: true
+          components:
+            db:
+              healthy: true
+    Health-Component:
+      title: Health-Component
+      type: object
+      properties:
+        healthy:
+          type: boolean
+        message:
+          type: string
+      required:
+        - healthy
