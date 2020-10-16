@@ -52,12 +52,16 @@ impl From<UserModel> for UserApiModel {
                 a.user.partial_cmp(&b.user),
                 a.display_name.partial_cmp(&b.display_name),
             ) {
-                (Some(Ordering::Less), _, _) => Ordering::Less,
-                (Some(Ordering::Greater), _, _) => Ordering::Greater,
-                (_, Some(Ordering::Less), _) => Ordering::Less,
-                (_, Some(Ordering::Greater), _) => Ordering::Greater,
-                (_, _, Some(Ordering::Less)) => Ordering::Less,
-                (_, _, Some(Ordering::Greater)) => Ordering::Greater,
+                (Some(Ordering::Less), _, _)
+                | (Some(Ordering::Equal), Some(Ordering::Less), _)
+                | (Some(Ordering::Equal), Some(Ordering::Equal), Some(Ordering::Less)) => {
+                    Ordering::Less
+                }
+                (Some(Ordering::Greater), _, _)
+                | (Some(Ordering::Equal), Some(Ordering::Greater), _)
+                | (Some(Ordering::Equal), Some(Ordering::Equal), Some(Ordering::Greater)) => {
+                    Ordering::Greater
+                }
                 (_, _, _) => Ordering::Equal,
             }
         });
