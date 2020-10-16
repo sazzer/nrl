@@ -60,7 +60,9 @@ async fn get_known_user() {
         email: Some("testuser@example.com".to_owned()),
         display_name: "Test User".to_owned(),
         ..SeedUser::default()
-    };
+    }
+    .with_authentication("twitter", "twitterUserId", "@testuser")
+    .with_authentication("google", "googleUserId", "testuser@example.com");
 
     let sut = TestServer::new().await;
     sut.seed(&seed_user).await;
@@ -84,7 +86,19 @@ async fn get_known_user() {
       "updated": "2020-10-16T06:40:41Z",
       "username": "testuser",
       "email": "testuser@example.com",
-      "displayName": "Test User"
+      "displayName": "Test User",
+      "authentications": [
+        {
+          "provider": "google",
+          "user": "googleUserId",
+          "displayName": "testuser@example.com"
+        },
+        {
+          "provider": "twitter",
+          "user": "twitterUserId",
+          "displayName": "@testuser"
+        }
+      ]
     }
     "###);
 }
@@ -122,7 +136,8 @@ async fn get_known_bare_user() {
       "userId": "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768",
       "created": "2020-10-12T06:40:41Z",
       "updated": "2020-10-16T06:40:41Z",
-      "displayName": "Test User"
+      "displayName": "Test User",
+      "authentications": []
     }
     "###);
 }

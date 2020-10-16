@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
 /// The ID of an authentication provider.
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct ProviderID(String);
 
 #[derive(Debug, PartialEq, thiserror::Error)]
@@ -23,7 +23,7 @@ impl FromStr for ProviderID {
 }
 
 /// The ID of a user with an authentication provider.
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct ProviderUserID(String);
 
 #[derive(Debug, PartialEq, thiserror::Error)]
