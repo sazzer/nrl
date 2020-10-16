@@ -15,7 +15,9 @@ pub struct UserApiModel {
     pub version: Uuid,
     pub created: DateTime<Utc>,
     pub updated: DateTime<Utc>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub username: Option<Username>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<Email>,
     pub display_name: DisplayName,
 }

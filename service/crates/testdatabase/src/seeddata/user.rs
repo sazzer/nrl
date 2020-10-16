@@ -11,8 +11,8 @@ pub struct SeedUser {
     pub version: Uuid,
     pub created: DateTime<Utc>,
     pub updated: DateTime<Utc>,
-    pub username: String,
-    pub email: String,
+    pub username: Option<String>,
+    pub email: Option<String>,
     pub display_name: String,
     pub authentications: serde_json::Value,
 }
@@ -24,8 +24,8 @@ impl Default for SeedUser {
             version: Uuid::new_v4(),
             created: Utc::now().with_nanosecond(0).unwrap(),
             updated: Utc::now().with_nanosecond(0).unwrap(),
-            username: format!("{}", Uuid::new_v4()),
-            email: format!("{}@example.com", Uuid::new_v4()),
+            username: Some(format!("{}", Uuid::new_v4())),
+            email: Some(format!("{}@example.com", Uuid::new_v4())),
             display_name: format!("{}", Uuid::new_v4()),
             authentications: json!([]),
         }

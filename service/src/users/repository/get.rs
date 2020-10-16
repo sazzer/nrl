@@ -102,6 +102,35 @@ mod tests {
     }
 
     #[actix_rt::test]
+    async fn test_get_by_id_bare_user() {
+        let seed_user = SeedUser {
+            username: None,
+            email: None,
+            ..SeedUser::default()
+        };
+
+        let db = TestDatabase::new().await;
+        db.seed(&seed_user).await;
+
+        let sut = UsersRepository::new(db.db);
+
+        let user_id = seed_user.user_id.clone().into();
+        let result = sut.get_user_by_id(&user_id).await;
+
+        let_assert!(Some(user) = result);
+
+        check!(user.identity.id == user_id);
+        check!(user.identity.version == seed_user.version);
+        check!(user.identity.created == seed_user.created);
+        check!(user.identity.updated == seed_user.updated);
+
+        check!(user.data.username == None);
+        check!(user.data.email == None);
+        check!(user.data.display_name == seed_user.display_name.parse().unwrap());
+        check!(user.data.authentications == vec![]);
+    }
+
+    #[actix_rt::test]
     async fn test_get_by_id_known_user() {
         let seed_user = SeedUser::default();
 
@@ -120,8 +149,8 @@ mod tests {
         check!(user.identity.created == seed_user.created);
         check!(user.identity.updated == seed_user.updated);
 
-        check!(user.data.username == Some(seed_user.username.parse().unwrap()));
-        check!(user.data.email == Some(seed_user.email.parse().unwrap()));
+        check!(user.data.username == seed_user.username.map(|v| v.parse().unwrap()));
+        check!(user.data.email == seed_user.email.map(|v| v.parse().unwrap()));
         check!(user.data.display_name == seed_user.display_name.parse().unwrap());
         check!(user.data.authentications == vec![]);
     }
@@ -147,8 +176,8 @@ mod tests {
         check!(user.identity.created == seed_user.created);
         check!(user.identity.updated == seed_user.updated);
 
-        check!(user.data.username == Some(seed_user.username.parse().unwrap()));
-        check!(user.data.email == Some(seed_user.email.parse().unwrap()));
+        check!(user.data.username == seed_user.username.map(|v| v.parse().unwrap()));
+        check!(user.data.email == seed_user.email.map(|v| v.parse().unwrap()));
         check!(user.data.display_name == seed_user.display_name.parse().unwrap());
         check!(
             user.data.authentications
