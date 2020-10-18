@@ -1,4 +1,5 @@
 use super::model::UserApiModel;
+use crate::authorization::SecurityContext;
 use crate::http::problem::{Problem, NOT_FOUND};
 use crate::users::{GetUserUseCase, UsersService};
 use actix_web::web::{Data, Path};
@@ -16,6 +17,7 @@ use std::sync::Arc;
 )]
 pub async fn get_user_by_id(
     path: Path<String>,
+    ssc: Option<SecurityContext>,
     user_service: Data<Arc<UsersService>>,
 ) -> Result<UserApiModel, Problem> {
     let user_id = path.0.parse().map_err(|e| {
