@@ -22,8 +22,8 @@ impl From<Uuid> for UserID {
 }
 
 impl From<&UserID> for Principal {
-    fn from(user_id: &UserID) -> Principal {
-        Principal::User(user_id.0.to_string())
+    fn from(user_id: &UserID) -> Self {
+        Self::User(user_id.0.to_string())
     }
 }
 

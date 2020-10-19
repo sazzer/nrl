@@ -50,7 +50,7 @@ async fn get_malformed_id() {
 }
 
 #[actix_rt::test]
-async fn get_known_user() {
+async fn get_known_user_when_unauthenticated() {
     let seed_user = SeedUser {
         user_id: "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768".parse().unwrap(),
         version: "fb3b7922-b79b-47a2-a273-31b8d4a32e84".parse().unwrap(),
@@ -71,6 +71,122 @@ async fn get_known_user() {
         .inject(
             TestRequest::get()
                 .uri("/users/dfbe0860-5c5e-4e3a-a4b0-c1d02510e768")
+                .to_request(),
+        )
+        .await;
+
+    check!(response.status == StatusCode::OK);
+    check!(response.header("content-type").unwrap() == "application/json");
+    check!(response.header("cache-control").unwrap() == "private, max-age=3600");
+    check!(response.header("etag").unwrap() == "\"fb3b7922-b79b-47a2-a273-31b8d4a32e84\"");
+    assert_json_snapshot!(response.to_json().unwrap(), @r###"
+    {
+      "userId": "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768",
+      "username": "testuser",
+      "displayName": "Test User"
+    }
+    "###);
+}
+
+#[actix_rt::test]
+async fn get_known_bare_user_when_unauthenticated() {
+    let seed_user = SeedUser {
+        user_id: "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768".parse().unwrap(),
+        version: "fb3b7922-b79b-47a2-a273-31b8d4a32e84".parse().unwrap(),
+        created: "2020-10-12T06:40:41Z".parse().unwrap(),
+        updated: "2020-10-16T06:40:41Z".parse().unwrap(),
+        username: None,
+        email: None,
+        display_name: "Test User".to_owned(),
+        ..SeedUser::default()
+    };
+
+    let sut = TestServer::new().await;
+    sut.seed(&seed_user).await;
+
+    let response = sut
+        .inject(
+            TestRequest::get()
+                .uri("/users/dfbe0860-5c5e-4e3a-a4b0-c1d02510e768")
+                .to_request(),
+        )
+        .await;
+
+    check!(response.status == StatusCode::OK);
+    check!(response.header("content-type").unwrap() == "application/json");
+    check!(response.header("cache-control").unwrap() == "private, max-age=3600");
+    check!(response.header("etag").unwrap() == "\"fb3b7922-b79b-47a2-a273-31b8d4a32e84\"");
+    assert_json_snapshot!(response.to_json().unwrap(), @r###"
+    {
+      "userId": "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768",
+      "displayName": "Test User"
+    }
+    "###);
+}
+
+#[actix_rt::test]
+async fn get_known_user_when_wrongly_authenticated() {
+    let seed_user = SeedUser {
+        user_id: "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768".parse().unwrap(),
+        version: "fb3b7922-b79b-47a2-a273-31b8d4a32e84".parse().unwrap(),
+        created: "2020-10-12T06:40:41Z".parse().unwrap(),
+        updated: "2020-10-16T06:40:41Z".parse().unwrap(),
+        username: Some("testuser".to_owned()),
+        email: Some("testuser@example.com".to_owned()),
+        display_name: "Test User".to_owned(),
+        ..SeedUser::default()
+    }
+    .with_authentication("twitter", "twitterUserId", "@testuser")
+    .with_authentication("google", "googleUserId", "testuser@example.com");
+
+    let sut = TestServer::new().await;
+    sut.seed(&seed_user).await;
+
+    let response = sut
+        .inject(
+            TestRequest::get()
+                .uri("/users/dfbe0860-5c5e-4e3a-a4b0-c1d02510e768")
+                .set(sut.authenticate("015dcad0-512e-4a4d-bc72-c711f4800a7c"))
+                .to_request(),
+        )
+        .await;
+
+    check!(response.status == StatusCode::OK);
+    check!(response.header("content-type").unwrap() == "application/json");
+    check!(response.header("cache-control").unwrap() == "private, max-age=3600");
+    check!(response.header("etag").unwrap() == "\"fb3b7922-b79b-47a2-a273-31b8d4a32e84\"");
+    assert_json_snapshot!(response.to_json().unwrap(), @r###"
+    {
+      "userId": "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768",
+      "username": "testuser",
+      "displayName": "Test User"
+    }
+    "###);
+}
+
+#[actix_rt::test]
+async fn get_known_user_when_authenticated() {
+    let seed_user = SeedUser {
+        user_id: "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768".parse().unwrap(),
+        version: "fb3b7922-b79b-47a2-a273-31b8d4a32e84".parse().unwrap(),
+        created: "2020-10-12T06:40:41Z".parse().unwrap(),
+        updated: "2020-10-16T06:40:41Z".parse().unwrap(),
+        username: Some("testuser".to_owned()),
+        email: Some("testuser@example.com".to_owned()),
+        display_name: "Test User".to_owned(),
+        ..SeedUser::default()
+    }
+    .with_authentication("twitter", "twitterUserId", "@testuser")
+    .with_authentication("google", "googleUserId", "testuser@example.com");
+
+    let sut = TestServer::new().await;
+    sut.seed(&seed_user).await;
+
+    let response = sut
+        .inject(
+            TestRequest::get()
+                .uri("/users/dfbe0860-5c5e-4e3a-a4b0-c1d02510e768")
+                .set(sut.authenticate("dfbe0860-5c5e-4e3a-a4b0-c1d02510e768"))
                 .to_request(),
         )
         .await;
@@ -104,7 +220,7 @@ async fn get_known_user() {
 }
 
 #[actix_rt::test]
-async fn get_known_bare_user() {
+async fn get_known_bare_user_when_authenticated() {
     let seed_user = SeedUser {
         user_id: "dfbe0860-5c5e-4e3a-a4b0-c1d02510e768".parse().unwrap(),
         version: "fb3b7922-b79b-47a2-a273-31b8d4a32e84".parse().unwrap(),
@@ -123,6 +239,7 @@ async fn get_known_bare_user() {
         .inject(
             TestRequest::get()
                 .uri("/users/dfbe0860-5c5e-4e3a-a4b0-c1d02510e768")
+                .set(sut.authenticate("dfbe0860-5c5e-4e3a-a4b0-c1d02510e768"))
                 .to_request(),
         )
         .await;

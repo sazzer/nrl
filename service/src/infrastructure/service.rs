@@ -1,11 +1,12 @@
 use super::{database, server::Server};
-use crate::infrastructure::health;
+use crate::{authorization::GenerateSecurityContextUseCase, infrastructure::health};
 use std::collections::HashMap;
 use std::sync::Arc;
 
 /// The actual service layer that does the real work.
 pub struct Service {
     pub(super) server: Server,
+    pub(super) generate_security_context_service: Arc<dyn GenerateSecurityContextUseCase>,
 }
 
 /// The settings needed for the service to work.
@@ -39,12 +40,16 @@ impl Service {
 
         let server = Server::new()
             .with_config(health)
-            .with_config(authorization)
+            .with_config(authorization.clone())
             .with_config(users);
 
         tracing::debug!("Finished building service");
 
-        Self { server }
+        Self {
+            server,
+            generate_security_context_service: authorization.service.clone()
+                as Arc<dyn GenerateSecurityContextUseCase>,
+        }
     }
 
     /// Start the service listening on the given port number.

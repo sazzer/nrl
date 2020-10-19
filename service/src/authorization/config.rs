@@ -9,7 +9,7 @@ use std::sync::Arc;
 
 /// Configuration for the authorization component.
 pub struct Config {
-    service: Arc<AuthorizationService>,
+    pub service: Arc<AuthorizationService>,
 }
 
 impl Config {

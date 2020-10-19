@@ -36,7 +36,7 @@ pub async fn get_user_by_id(
     let result = if authorizer
         .begin()
         .same_principal(&Principal::from(&user_id))
-        .to_result()
+        .into_result()
         .is_ok()
     {
         user.map(|u| Either::B(u.into()))

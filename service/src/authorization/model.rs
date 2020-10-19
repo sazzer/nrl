@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use std::fmt::{Display, Formatter};
 use uuid::Uuid;
 
 /// A `Principal` is some entity that has been authorized to perform actions.
@@ -34,3 +35,9 @@ pub struct SecurityContext {
 /// A `SignedSecurityContext` represents a security context that has been securely signed.
 #[derive(Debug)]
 pub struct SignedSecurityContext(pub(super) String);
+
+impl Display for SignedSecurityContext {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}

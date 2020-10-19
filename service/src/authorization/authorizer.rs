@@ -31,7 +31,7 @@ impl Authorizer {
 
 impl<'a> Authorizing<'a> {
     /// Finish authorizing, producing a `Result` to indicate success or failure.
-    pub fn to_result(self) -> Result<(), Problem> {
+    pub fn into_result(self) -> Result<(), Problem> {
         if self.1 {
             Ok(())
         } else {
@@ -46,7 +46,7 @@ impl<'a> Authorizing<'a> {
     ///
     /// # Returns
     /// A new `Authorizing` struct to continue authorization check with.
-    fn perform_check(self, result: bool) -> Self {
+    const fn perform_check(self, result: bool) -> Self {
         Self(self.0, self.1 && result)
     }
 

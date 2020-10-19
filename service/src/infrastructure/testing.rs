@@ -1,4 +1,6 @@
 use super::service::Service;
+use crate::authorization::SignedSecurityContext;
+use crate::users::UserID;
 use actix_http::Request;
 use actix_web::App;
 use std::ops::Deref;
@@ -26,6 +28,14 @@ impl Service {
             headers,
             body,
         }
+    }
+
+    /// Helper to generate a security context for the given User ID. Only used for testing.
+    #[must_use]
+    pub fn generate_security_context(&self, user_id: &UserID) -> SignedSecurityContext {
+        self.generate_security_context_service
+            .generate_security_context(user_id.into())
+            .1
     }
 }
 

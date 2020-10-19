@@ -1,4 +1,10 @@
 use actix_http::Request;
+use actix_web::{
+    error::ParseError,
+    http::header::{
+        Header, HeaderName, HeaderValue, IntoHeaderValue, InvalidHeaderValue, AUTHORIZATION,
+    },
+};
 use nrl_lib::{Service, ServiceSettings, TestResponse};
 use nrl_testdatabase::{seeddata::SeedData, TestDatabase};
 
@@ -36,5 +42,37 @@ impl TestServer {
     pub async fn seed(&self, data: &dyn SeedData) -> &Self {
         self.database.seed(data).await;
         self
+    }
+
+    pub fn authenticate<S>(&self, user_id: S) -> impl Header
+    where
+        S: Into<String>,
+    {
+        let security_context = self
+            .service
+            .generate_security_context(&user_id.into().parse().unwrap());
+
+        Authorization(security_context.to_string())
+    }
+}
+
+/// Representation of the Authorization header containing a signed security context
+struct Authorization(String);
+
+impl IntoHeaderValue for Authorization {
+    type Error = InvalidHeaderValue;
+
+    fn try_into(self) -> Result<HeaderValue, Self::Error> {
+        let value = format!("Bearer {}", self.0);
+        HeaderValue::from_str(&value)
+    }
+}
+impl Header for Authorization {
+    fn name() -> HeaderName {
+        AUTHORIZATION
+    }
+
+    fn parse<T>(_: &T) -> Result<Self, ParseError> {
+        todo!()
     }
 }
