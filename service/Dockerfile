@@ -1,5 +1,5 @@
 # Build the code first
-FROM rust:1.46.0-slim-buster AS builder
+FROM rust:slim-buster AS builder
 
 RUN rustc --version --verbose
 RUN apt update -y && apt install -y pkg-config libssl-dev
