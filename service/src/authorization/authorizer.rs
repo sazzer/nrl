@@ -51,7 +51,7 @@ impl<'a> Authorizing<'a> {
     }
 
     /// Check if this request has been authorized, but regardless of who it was authorized for.
-    pub const fn authorized(self) -> Self {
+    pub fn authorized(self) -> Self {
         let result = self.0.is_some();
         self.perform_check(result)
     }
