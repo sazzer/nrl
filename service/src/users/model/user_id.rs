@@ -1,3 +1,4 @@
+use crate::authorization::Principal;
 use bytes::BytesMut;
 use postgres_types::{accepts, to_sql_checked, FromSql, IsNull, ToSql, Type};
 use serde::Serialize;
@@ -17,6 +18,12 @@ impl Default for UserID {
 impl From<Uuid> for UserID {
     fn from(value: Uuid) -> Self {
         Self(value)
+    }
+}
+
+impl From<&UserID> for Principal {
+    fn from(user_id: &UserID) -> Principal {
+        Principal::User(user_id.0.to_string())
     }
 }
 

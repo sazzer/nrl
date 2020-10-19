@@ -24,6 +24,18 @@ pub struct UserApiModel {
     pub authentications: Vec<AuthenticationApiModel>,
 }
 
+/// HTTP API model representing a simple user, for cases where the client is not authorized to all the details.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SimpleUserApiModel {
+    pub user_id: UserID,
+    #[serde(skip)]
+    pub version: Uuid,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub username: Option<Username>,
+    pub display_name: DisplayName,
+}
+
 /// HTTP API model representing the authentication details of a user.
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -79,7 +91,40 @@ impl From<UserModel> for UserApiModel {
     }
 }
 
+impl From<UserModel> for SimpleUserApiModel {
+    fn from(user: UserModel) -> Self {
+        Self {
+            user_id: user.identity.id,
+            version: user.identity.version,
+            username: user.data.username,
+            display_name: user.data.display_name,
+        }
+    }
+}
+
 impl Responder for UserApiModel {
+    type Error = Error;
+    type Future = Ready<Result<Response, Error>>;
+
+    /// Generate an HTTP Response for the User.
+    ///
+    /// This will include HTTP headers for the Etag and Last Modified dates based on the model data.
+    fn respond_to(self, _: &HttpRequest) -> Self::Future {
+        let response = HttpResponse::build(StatusCode::OK)
+            .set(header::ETag(header::EntityTag::strong(
+                self.version.to_string(),
+            )))
+            .set(header::CacheControl(vec![
+                header::CacheDirective::Private,
+                header::CacheDirective::MaxAge(3600),
+            ]))
+            .json(self);
+
+        ok(response)
+    }
+}
+
+impl Responder for SimpleUserApiModel {
     type Error = Error;
     type Future = Ready<Result<Response, Error>>;
 

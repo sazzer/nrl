@@ -1,8 +1,10 @@
+mod authorizer;
 pub mod config;
+mod http;
 mod model;
 mod service;
 mod usecases;
-mod http;
 
+pub use authorizer::*;
 pub use model::*;
 pub use usecases::*;
