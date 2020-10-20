@@ -51,13 +51,6 @@ impl<'a> Authorizing<'a> {
     }
 
     /// Check if this request has been authorized, but regardless of who it was authorized for.
-    #[allow(clippy::missing_const_for_fn)] // Clippy is wrong on stable rust
-    pub fn authorized(self) -> Self {
-        let result = self.0.is_some();
-        self.perform_check(result)
-    }
-
-    /// Check if this request has been authorized, but regardless of who it was authorized for.
     pub fn same_principal(self, principal: &Principal) -> Self {
         let result = match &self.0 {
             None => false,
