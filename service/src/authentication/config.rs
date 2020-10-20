@@ -1,13 +1,19 @@
+use super::Registry;
 use crate::infrastructure::server::ServerConfig;
 use actix_web::web;
+use std::sync::Arc;
 
 /// Configuration for the authentication component.
-pub struct Config {}
+pub struct Config {
+    registry: Arc<Registry>,
+}
 
 impl Config {
     /// Create a new authentication component.
-    pub const fn new() -> Self {
-        Self {}
+    pub fn new() -> Self {
+        Self {
+            registry: Arc::new(Registry::new()),
+        }
     }
 }
 
@@ -16,5 +22,7 @@ impl ServerConfig for Config {
     ///
     /// # Parameters
     /// - `config` - The Actix `ServiceConfig` object to configure
-    fn configure(&self, _config: &mut web::ServiceConfig) {}
+    fn configure(&self, config: &mut web::ServiceConfig) {
+        config.data(self.registry.clone());
+    }
 }
