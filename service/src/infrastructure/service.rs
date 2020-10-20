@@ -31,8 +31,8 @@ impl Service {
         database::migrations::migrate(&db).await;
 
         let authorization = Arc::new(crate::authorization::config::Config::new());
-
         let users = Arc::new(crate::users::config::Config::new(db.clone()));
+        let authentication = Arc::new(crate::authentication::config::Config::new());
 
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
         health_components.insert("db".to_owned(), db);
@@ -41,6 +41,7 @@ impl Service {
         let server = Server::new()
             .with_config(health)
             .with_config(authorization.clone())
+            .with_config(authentication)
             .with_config(users);
 
         tracing::debug!("Finished building service");
