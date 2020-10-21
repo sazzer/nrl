@@ -1,4 +1,4 @@
-use super::{Authenticator, AuthenticatorID};
+use crate::authentication::{Authenticator, AuthenticatorID};
 use std::collections::HashMap;
 use std::sync::Arc;
 

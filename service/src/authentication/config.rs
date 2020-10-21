@@ -1,4 +1,4 @@
-use super::Registry;
+use super::service::registry::Registry;
 use crate::infrastructure::server::ServerConfig;
 use actix_web::web;
 use std::sync::Arc;
