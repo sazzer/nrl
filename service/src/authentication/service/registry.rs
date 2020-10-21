@@ -30,8 +30,8 @@ impl Registry {
     }
 
     /// Get the list of all authenticators that are present in the registry.
-    pub fn list(&self) -> impl Iterator<Item = &AuthenticatorID> + '_ {
-        self.authenticators.keys()
+    pub fn list(&self) -> Vec<&AuthenticatorID> {
+        self.authenticators.keys().collect()
     }
 
     /// Get the authenticator that has the provided ID
@@ -55,7 +55,7 @@ mod tests {
     fn list_no_authenticators() {
         let sut = Registry::new();
 
-        let result: Vec<&AuthenticatorID> = sut.list().collect();
+        let result: Vec<&AuthenticatorID> = sut.list();
         check!(result.is_empty());
     }
 
@@ -67,7 +67,7 @@ mod tests {
 
         // Note that we're asserting on the output of formattingthe Authenticator IDs, purely because it's easier
         // than sorting them.
-        let mut result: Vec<String> = sut.list().map(|v| format!("{:?}", v)).collect();
+        let mut result: Vec<String> = sut.list().into_iter().map(|v| format!("{:?}", v)).collect();
         result.sort();
 
         check!(result.len() == 2);
