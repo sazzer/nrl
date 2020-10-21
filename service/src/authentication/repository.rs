@@ -2,20 +2,20 @@ use crate::authentication::{Authenticator, AuthenticatorID};
 use std::collections::HashMap;
 use std::sync::Arc;
 
-/// The registry of authenticators that we can use
-pub struct Registry {
+/// The repository of authenticators that we can use
+pub struct AuthenticatorRepository {
     authenticators: HashMap<AuthenticatorID, Arc<dyn Authenticator>>,
 }
 
-impl Registry {
-    /// Create a new registry of authenticators
+impl AuthenticatorRepository {
+    /// Create a new repository of authenticators
     pub fn new() -> Self {
         Self {
             authenticators: HashMap::new(),
         }
     }
 
-    /// Add a new authenticator to the registry.
+    /// Add a new authenticator to the repository.
     ///
     /// # Parameters
     /// - `authenticator_id` - The ID of the authenticator
@@ -29,7 +29,7 @@ impl Registry {
         self
     }
 
-    /// Get the list of all authenticators that are present in the registry.
+    /// Get the list of all authenticators that are present in the repository.
     pub fn list(&self) -> Vec<&AuthenticatorID> {
         self.authenticators.keys().collect()
     }
@@ -53,7 +53,7 @@ mod tests {
 
     #[test]
     fn list_no_authenticators() {
-        let sut = Registry::new();
+        let sut = AuthenticatorRepository::new();
 
         let result: Vec<&AuthenticatorID> = sut.list();
         check!(result.is_empty());
@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     fn list_authenticators() {
-        let mut sut = Registry::new();
+        let mut sut = AuthenticatorRepository::new();
         sut.with_authenticator("google".parse().unwrap(), Arc::new(MockAuthenticator {}));
         sut.with_authenticator("twitter".parse().unwrap(), Arc::new(MockAuthenticator {}));
 
@@ -77,7 +77,7 @@ mod tests {
 
     #[test]
     fn get_unknown_authenticator() {
-        let sut = Registry::new();
+        let sut = AuthenticatorRepository::new();
 
         let result = sut.get(&"unknown".parse().unwrap());
         check!(result.is_none());
@@ -88,7 +88,7 @@ mod tests {
     fn get_known_authenticator() {
         let authenticator = Arc::new(MockAuthenticator {});
 
-        let mut sut = Registry::new();
+        let mut sut = AuthenticatorRepository::new();
         sut.with_authenticator("google".parse().unwrap(), authenticator.clone());
 
         let result = sut.get(&"google".parse().unwrap()).unwrap();

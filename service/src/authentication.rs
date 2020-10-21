@@ -1,5 +1,6 @@
 pub mod config;
 mod model;
+mod repository;
 mod service;
 mod usecases;
 

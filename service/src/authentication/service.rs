@@ -1,16 +1,15 @@
 mod list;
-pub mod registry;
 
-use registry::Registry;
+use crate::authentication::repository::AuthenticatorRepository;
 
 /// The actual authentication service.
 pub struct AuthenticationService {
-    registry: Registry,
+    repository: AuthenticatorRepository,
 }
 
 impl AuthenticationService {
     /// Create a new Authentication service.
-    pub const fn new(registry: Registry) -> Self {
-        Self { registry }
+    pub const fn new(repository: AuthenticatorRepository) -> Self {
+        Self { repository }
     }
 }

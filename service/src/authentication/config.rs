@@ -1,4 +1,4 @@
-use super::service::{registry::Registry, AuthenticationService};
+use crate::authentication::{repository::AuthenticatorRepository, service::AuthenticationService};
 use crate::infrastructure::server::ServerConfig;
 use actix_web::web;
 use std::sync::Arc;
@@ -12,7 +12,7 @@ impl Config {
     /// Create a new authentication component.
     pub fn new() -> Self {
         Self {
-            service: Arc::new(AuthenticationService::new(Registry::new())),
+            service: Arc::new(AuthenticationService::new(AuthenticatorRepository::new())),
         }
     }
 }
