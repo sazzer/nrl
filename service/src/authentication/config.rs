@@ -24,5 +24,10 @@ impl ServerConfig for Config {
     /// - `config` - The Actix `ServiceConfig` object to configure
     fn configure(&self, config: &mut web::ServiceConfig) {
         config.data(self.service.clone());
+
+        config.service(
+            web::resource("/authentication")
+                .route(web::get().to(super::endpoints::list_authenticators)),
+        );
     }
 }

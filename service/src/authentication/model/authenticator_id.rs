@@ -1,7 +1,8 @@
+use serde::Serialize;
 use std::str::FromStr;
 
 /// The ID of an authenticator.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize)]
 pub struct AuthenticatorID(String);
 
 #[derive(Debug, PartialEq, thiserror::Error)]
