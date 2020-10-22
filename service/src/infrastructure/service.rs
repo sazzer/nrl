@@ -14,6 +14,8 @@ pub struct Service {
 pub struct ServiceSettings {
     /// The database connection URL.
     pub database_url: String,
+
+    pub google_config: Option<crate::GoogleConfig>,
 }
 
 impl Service {
@@ -24,7 +26,7 @@ impl Service {
     ///
     /// # Returns
     /// The service, ready to work with.
-    pub async fn new(settings: &ServiceSettings) -> Self {
+    pub async fn new(settings: ServiceSettings) -> Self {
         tracing::debug!(settings = ?settings, "Building service");
 
         let db = Arc::new(database::Database::new(&settings.database_url));
@@ -32,7 +34,11 @@ impl Service {
 
         let authorization = Arc::new(crate::authorization::config::Config::new());
         let users = Arc::new(crate::users::config::Config::new(db.clone()));
-        let authentication = Arc::new(crate::authentication::config::Config::new());
+        let authentication = Arc::new(
+            crate::authentication::config::Config::new()
+                .with_google(settings.google_config)
+                .build(),
+        );
 
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();
         health_components.insert("db".to_owned(), db);

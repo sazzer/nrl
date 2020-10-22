@@ -24,8 +24,9 @@ impl TestServer {
 
         let settings = ServiceSettings {
             database_url: database.url.clone(),
+            google_config: None,
         };
-        let service = Service::new(&settings).await;
+        let service = Service::new(settings).await;
 
         Self { service, database }
     }

@@ -9,3 +9,5 @@ pub use infrastructure::{
     service::{Service, ServiceSettings},
     testing::TestResponse,
 };
+
+pub use authentication::google::GoogleConfig;
