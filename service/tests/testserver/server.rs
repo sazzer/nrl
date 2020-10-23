@@ -24,7 +24,13 @@ impl TestServer {
 
         let settings = ServiceSettings {
             database_url: database.url.clone(),
-            google_config: None,
+            google_config: Some(nrl_lib::GoogleConfig {
+                client_id: "googleClientId".parse().unwrap(),
+                client_secret: "googleClientSecret".parse().unwrap(),
+                redirect_uri: "http://www.example.com/authenticate/google/callback".to_owned(),
+                auth_uri: None,
+                token_uri: None,
+            }),
         };
         let service = Service::new(settings).await;
 

@@ -41,7 +41,7 @@ impl AuthenticatorRepository {
     ///
     /// # Returns
     /// The authenticator, or `None` if it is unknown.
-    fn get(&self, index: &AuthenticatorID) -> Option<&Arc<dyn Authenticator>> {
+    pub fn get(&self, index: &AuthenticatorID) -> Option<&Arc<dyn Authenticator>> {
         self.authenticators.get(index)
     }
 }

@@ -1,4 +1,5 @@
 mod list;
+mod start;
 
 use crate::authentication::{repository::AuthenticatorRepository, Authenticator, AuthenticatorID};
 use std::sync::Arc;
