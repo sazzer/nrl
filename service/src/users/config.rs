@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 /// Configuration for the users component.
 pub struct Config {
-    service: Arc<UsersService>,
+    pub service: Arc<UsersService>,
 }
 
 impl Config {
