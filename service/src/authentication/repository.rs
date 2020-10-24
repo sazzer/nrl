@@ -97,5 +97,9 @@ mod tests {
     }
 
     struct MockAuthenticator {}
-    impl Authenticator for MockAuthenticator {}
+    impl Authenticator for MockAuthenticator {
+        fn start_authentication(&self, _state: &str) -> String {
+            unimplemented!()
+        }
+    }
 }

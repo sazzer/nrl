@@ -1,8 +1,8 @@
 use crate::authentication::{
     AuthenticationService, AuthenticatorID, StartAuthenticationError, StartAuthenticationUseCase,
 };
-use crate::http::problem::{Problem, INTERNAL_ERROR, NOT_FOUND};
-use actix_web::web::{Data, Path};
+use crate::http::problem::{Problem, NOT_FOUND};
+use actix_web::web::{Data, HttpResponse, Path};
 use std::sync::Arc;
 
 /// HTTP Handler for listing the authenticators we can use.
@@ -19,18 +19,17 @@ use std::sync::Arc;
 pub async fn start_authentication(
     authentication_service: Data<Arc<AuthenticationService>>,
     path: Path<String>,
-) -> Result<actix_web::web::Json<String>, Problem> {
+) -> Result<HttpResponse, Problem> {
     let authenticator: AuthenticatorID = path.0.parse().map_err(|_| Problem::from(NOT_FOUND))?;
 
-    let result = authentication_service.start(authenticator);
-
-    result.map_err(|e| {
+    let result = authentication_service.start(authenticator).map_err(|e| {
         let problem = match e {
             StartAuthenticationError::UnknownAuthenticator => NOT_FOUND,
-            StartAuthenticationError::UnexpectedError => INTERNAL_ERROR,
         };
         Problem::from(problem)
     })?;
 
-    todo!()
+    Ok(HttpResponse::Found()
+        .header("Location", result.redirect_uri)
+        .finish())
 }

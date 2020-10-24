@@ -1,7 +1,8 @@
 use std::str::FromStr;
+use uritemplate::{IntoTemplateVar, TemplateVar};
 
 /// The Client ID for authenticating with Google.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GoogleClientId(String);
 
 #[derive(Debug, PartialEq, thiserror::Error)]
@@ -18,6 +19,12 @@ impl FromStr for GoogleClientId {
             "" => Err(Self::Err::Blank),
             value => Ok(Self(value.to_owned())),
         }
+    }
+}
+
+impl<'a> IntoTemplateVar for GoogleClientId {
+    fn into_template_var(self) -> TemplateVar {
+        TemplateVar::Scalar(self.0)
     }
 }
 

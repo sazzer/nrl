@@ -9,17 +9,14 @@ pub trait ListProvidersUseCase {
 /// The result of starting authentication.
 #[derive(Debug)]
 pub struct StartAuthentication {
-    redirect_uri: String,
-    state: String,
+    pub redirect_uri: String,
+    pub state: String,
 }
 
 #[derive(Debug, PartialEq, thiserror::Error)]
 pub enum StartAuthenticationError {
     #[error("The requested authenticator was unknown")]
     UnknownAuthenticator,
-
-    #[error("An unexpected error occurred")]
-    UnexpectedError,
 }
 
 pub trait StartAuthenticationUseCase {
