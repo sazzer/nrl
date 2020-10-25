@@ -4,6 +4,9 @@ use async_trait::async_trait;
 #[allow(clippy::empty_enum)]
 #[derive(Debug, PartialEq, thiserror::Error)]
 pub enum AuthenticateUserError {
+    #[error("The email address is registered to another user")]
+    DuplicateEmail,
+
     #[error("An unknown error occurred")]
     UnknownError,
 }

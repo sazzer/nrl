@@ -1,6 +1,6 @@
 use crate::users::{
-    service::UsersService, AuthenticateUserError, AuthenticateUserUseCase, Authentication,
-    DisplayName, Email, UserData, UserModel,
+    repository::SaveUserError, service::UsersService, AuthenticateUserError,
+    AuthenticateUserUseCase, Authentication, DisplayName, Email, UserData, UserModel,
 };
 use async_trait::async_trait;
 
@@ -40,7 +40,10 @@ impl AuthenticateUserUseCase for UsersService {
                     authentications: vec![authentication],
                 })
                 .await
-                .map_err(|e| AuthenticateUserError::UnknownError)
+                .map_err(|e| match e {
+                    SaveUserError::DuplicateEmail => AuthenticateUserError::DuplicateEmail,
+                    SaveUserError::UnknownError => AuthenticateUserError::UnknownError,
+                })
         }
     }
 }
@@ -97,7 +100,7 @@ mod tests {
     }
 
     #[actix_rt::test]
-    async fn test_authenticate_new_user() {
+    async fn test_authenticate_new_user_no_email() {
         let db = TestDatabase::new().await;
 
         let sut = Config::new(db.db).service;
@@ -127,5 +130,66 @@ mod tests {
                     display_name: "Twitter User".to_owned(),
                 },]
         );
+    }
+
+    #[actix_rt::test]
+    async fn test_authenticate_new_user_with_email() {
+        let db = TestDatabase::new().await;
+
+        let sut = Config::new(db.db).service;
+
+        let result = sut
+            .authenticate_user(
+                Authentication {
+                    provider: "twitter".parse().unwrap(),
+                    user: "twitterUserId".parse().unwrap(),
+                    display_name: "Twitter User".parse().unwrap(),
+                },
+                "Twitter User".parse().unwrap(),
+                Some("testuser@example.com".parse().unwrap()),
+            )
+            .await;
+
+        let_assert!(Ok(user) = result);
+
+        check!(user.data.username == None);
+        check!(user.data.email == Some("testuser@example.com".parse().unwrap()));
+        check!(user.data.display_name == "Twitter User".parse().unwrap());
+        check!(
+            user.data.authentications
+                == vec![Authentication {
+                    provider: "twitter".parse().unwrap(),
+                    user: "twitterUserId".parse().unwrap(),
+                    display_name: "Twitter User".to_owned(),
+                },]
+        );
+    }
+
+    #[actix_rt::test]
+    async fn test_authenticate_new_user_duplicate_email() {
+        let seed_user = SeedUser {
+            email: Some("testuser@example.com".to_owned()),
+            ..SeedUser::default()
+        };
+
+        let db = TestDatabase::new().await;
+        db.seed(&seed_user).await;
+
+        let sut = Config::new(db.db).service;
+
+        let result = sut
+            .authenticate_user(
+                Authentication {
+                    provider: "twitter".parse().unwrap(),
+                    user: "twitterUserId".parse().unwrap(),
+                    display_name: "Twitter User".parse().unwrap(),
+                },
+                "Twitter User".parse().unwrap(),
+                Some("testuser@example.com".parse().unwrap()),
+            )
+            .await;
+
+        let_assert!(Err(err) = result);
+        check!(err == AuthenticateUserError::DuplicateEmail);
     }
 }

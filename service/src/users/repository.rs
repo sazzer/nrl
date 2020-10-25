@@ -1,8 +1,10 @@
 mod create;
+mod errors;
 mod get;
 mod model;
 
 use crate::infrastructure::database::Database;
+pub use errors::*;
 use std::sync::Arc;
 
 /// Repository of users data.

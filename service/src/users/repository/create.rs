@@ -1,13 +1,7 @@
-use super::UsersRepository;
+use super::{SaveUserError, UsersRepository};
 use crate::users::{UserData, UserID, UserModel};
 use chrono::Utc;
 use uuid::Uuid;
-
-#[derive(Debug, PartialEq, thiserror::Error)]
-pub enum CreateUserError {
-    #[error("An unknown error occurred")]
-    UnknownError,
-}
 
 impl UsersRepository {
     /// Create a new user record.
@@ -17,7 +11,7 @@ impl UsersRepository {
     ///
     /// # Returns
     /// The newly created user.
-    pub async fn create_user(&self, data: UserData) -> Result<UserModel, CreateUserError> {
+    pub async fn create_user(&self, data: UserData) -> Result<UserModel, SaveUserError> {
         tracing::debug!(data = ?data, "Creating new user");
 
         let conn = self
@@ -45,13 +39,10 @@ impl UsersRepository {
           ]
         )
           .await
-          .map(UserModel::from)
-            .map_err(|e| {
-              CreateUserError::UnknownError
-            });
+          .map(UserModel::from)?;
 
         tracing::debug!(user = ?user, "Created new user");
 
-        user
+        Ok(user)
     }
 }
