@@ -1,3 +1,4 @@
+mod authenticate;
 mod get;
 
 use super::repository::UsersRepository;
