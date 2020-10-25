@@ -1,5 +1,7 @@
 use super::GoogleConfig;
-use crate::authentication::Authenticator;
+use crate::authentication::{AuthenticatedUser, Authenticator};
+use async_trait::async_trait;
+use std::collections::HashMap;
 use uritemplate::UriTemplate;
 
 /// Default URI template for starting authentication if one isn't provided.
@@ -17,6 +19,7 @@ impl GoogleAuthenticator {
     }
 }
 
+#[async_trait]
 impl Authenticator for GoogleAuthenticator {
     /// Start authentication with the provider.
     ///
@@ -39,6 +42,17 @@ impl Authenticator for GoogleAuthenticator {
             .set("redirect_uri", self.config.redirect_uri.clone())
             .set("state", state)
             .build()
+    }
+
+    /// Complete authentication with the provider
+    ///
+    /// # Parameters
+    /// - `params` - The parameters received from the provider
+    ///
+    /// # Returns
+    /// The details of the user that just authenticated.
+    async fn complete_authentication(&self, _params: HashMap<String, String>) -> AuthenticatedUser {
+        todo!()
     }
 }
 
