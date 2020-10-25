@@ -3,7 +3,10 @@ use async_trait::async_trait;
 
 #[allow(clippy::empty_enum)]
 #[derive(Debug, PartialEq, thiserror::Error)]
-pub enum AuthenticateUserError {}
+pub enum AuthenticateUserError {
+    #[error("An unknown error occurred")]
+    UnknownError,
+}
 
 #[async_trait]
 pub trait AuthenticateUserUseCase {

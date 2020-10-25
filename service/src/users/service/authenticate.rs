@@ -1,6 +1,6 @@
 use crate::users::{
     service::UsersService, AuthenticateUserError, AuthenticateUserUseCase, Authentication,
-    DisplayName, Email, UserModel,
+    DisplayName, Email, UserData, UserModel,
 };
 use async_trait::async_trait;
 
@@ -20,8 +20,8 @@ impl AuthenticateUserUseCase for UsersService {
     async fn authenticate_user(
         &self,
         authentication: Authentication,
-        _display_name: DisplayName,
-        _email: Option<Email>,
+        display_name: DisplayName,
+        email: Option<Email>,
     ) -> Result<UserModel, AuthenticateUserError> {
         if let Some(user) = self
             .repository
@@ -32,7 +32,15 @@ impl AuthenticateUserUseCase for UsersService {
             Ok(user)
         } else {
             // A user with these authentication details don't exist, so lets create a new one.
-            todo!()
+            self.repository
+                .create_user(UserData {
+                    username: None,
+                    email,
+                    display_name,
+                    authentications: vec![authentication],
+                })
+                .await
+                .map_err(|e| AuthenticateUserError::UnknownError)
         }
     }
 }
@@ -78,6 +86,39 @@ mod tests {
         check!(user.data.username == seed_user.username.map(|v| v.parse().unwrap()));
         check!(user.data.email == seed_user.email.map(|v| v.parse().unwrap()));
         check!(user.data.display_name == seed_user.display_name.parse().unwrap());
+        check!(
+            user.data.authentications
+                == vec![Authentication {
+                    provider: "twitter".parse().unwrap(),
+                    user: "twitterUserId".parse().unwrap(),
+                    display_name: "Twitter User".to_owned(),
+                },]
+        );
+    }
+
+    #[actix_rt::test]
+    async fn test_authenticate_new_user() {
+        let db = TestDatabase::new().await;
+
+        let sut = Config::new(db.db).service;
+
+        let result = sut
+            .authenticate_user(
+                Authentication {
+                    provider: "twitter".parse().unwrap(),
+                    user: "twitterUserId".parse().unwrap(),
+                    display_name: "Twitter User".parse().unwrap(),
+                },
+                "Twitter User".parse().unwrap(),
+                None,
+            )
+            .await;
+
+        let_assert!(Ok(user) = result);
+
+        check!(user.data.username == None);
+        check!(user.data.email == None);
+        check!(user.data.display_name == "Twitter User".parse().unwrap());
         check!(
             user.data.authentications
                 == vec![Authentication {
