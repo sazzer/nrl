@@ -3,15 +3,15 @@ use async_trait::async_trait;
 use std::collections::HashMap;
 
 /// Details of a user that has just authenticated.
+#[derive(Debug)]
 pub struct AuthenticatedUser {
     pub user_id: ProviderUserID,
     pub display_name: DisplayName,
     pub email: Option<Email>,
 }
 
-/// Trait that all authenticators can implement.
-#[async_trait]
-pub trait Authenticator: Send + Sync {
+/// Trait for starting authentication.
+pub trait StartAuthentication: Send + Sync {
     /// Start authentication with the provider.
     ///
     /// # Parameters
@@ -20,7 +20,11 @@ pub trait Authenticator: Send + Sync {
     /// # Returns
     /// The URI to redirect the client to in order to start authentication
     fn start_authentication(&self, state: &str) -> String;
+}
 
+/// Trait for completing authentication.
+#[async_trait]
+pub trait CompleteAuthentication: Send + Sync {
     /// Complete authentication with the provider
     ///
     /// # Parameters
@@ -28,5 +32,12 @@ pub trait Authenticator: Send + Sync {
     ///
     /// # Returns
     /// The details of the user that just authenticated.
-    async fn complete_authentication(&self, params: HashMap<String, String>) -> AuthenticatedUser;
+    /// If authentication failed then returns `None` instead.
+    async fn complete_authentication(
+        &self,
+        params: HashMap<String, String>,
+    ) -> Option<AuthenticatedUser>;
 }
+
+/// Trait that all authenticators must implement.
+pub trait Authenticator: StartAuthentication + CompleteAuthentication {}

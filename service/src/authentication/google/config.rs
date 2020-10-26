@@ -1,3 +1,4 @@
+use std::convert::AsRef;
 use std::str::FromStr;
 use uritemplate::{IntoTemplateVar, TemplateVar};
 
@@ -28,6 +29,12 @@ impl<'a> IntoTemplateVar for GoogleClientId {
     }
 }
 
+impl AsRef<str> for GoogleClientId {
+    fn as_ref(&self) -> &str {
+        &self.0
+    }
+}
+
 /// The Client Secret for authenticating with Google.
 #[derive(Debug)]
 pub struct GoogleClientSecret(String);
@@ -46,6 +53,12 @@ impl FromStr for GoogleClientSecret {
             "" => Err(Self::Err::Blank),
             value => Ok(Self(value.to_owned())),
         }
+    }
+}
+
+impl AsRef<str> for GoogleClientSecret {
+    fn as_ref(&self) -> &str {
+        &self.0
     }
 }
 

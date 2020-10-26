@@ -49,7 +49,7 @@ impl AuthenticatorRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::authentication::AuthenticatedUser;
+    use crate::authentication::{AuthenticatedUser, CompleteAuthentication, StartAuthentication};
     use assert2::check;
     use async_trait::async_trait;
 
@@ -100,16 +100,20 @@ mod tests {
 
     struct MockAuthenticator {}
 
-    #[async_trait]
-    impl Authenticator for MockAuthenticator {
+    impl Authenticator for MockAuthenticator {}
+
+    impl StartAuthentication for MockAuthenticator {
         fn start_authentication(&self, _state: &str) -> String {
             unimplemented!()
         }
+    }
 
+    #[async_trait]
+    impl CompleteAuthentication for MockAuthenticator {
         async fn complete_authentication(
             &self,
             _params: HashMap<String, String>,
-        ) -> AuthenticatedUser {
+        ) -> Option<AuthenticatedUser> {
             unimplemented!()
         }
     }

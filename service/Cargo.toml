@@ -37,6 +37,7 @@ tracing-log = "0.1.1"
 tracing-subscriber = "0.2.12"
 uuid = {version = "0.8.1", features = ["v4", "serde"] }
 uritemplate = "0.1.2"
+reqwest = "0.10.8"
 
 [dev-dependencies]
 assert2 = "0.3.3"

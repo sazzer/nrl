@@ -1,5 +1,5 @@
 use crate::authentication::{
-    AuthenticationService, AuthenticatorID, StartAuthentication, StartAuthenticationError,
+    AuthenticationService, AuthenticatorID, StartAuthenticationDetails, StartAuthenticationError,
     StartAuthenticationUseCase,
 };
 use uuid::Uuid;
@@ -8,7 +8,7 @@ impl StartAuthenticationUseCase for AuthenticationService {
     fn start(
         &self,
         authenticator: AuthenticatorID,
-    ) -> Result<StartAuthentication, StartAuthenticationError> {
+    ) -> Result<StartAuthenticationDetails, StartAuthenticationError> {
         let authenticator = self
             .repository
             .get(&authenticator)
@@ -18,7 +18,7 @@ impl StartAuthenticationUseCase for AuthenticationService {
 
         let redirect_uri = authenticator.start_authentication(&state);
 
-        Ok(StartAuthentication {
+        Ok(StartAuthenticationDetails {
             state,
             redirect_uri,
         })

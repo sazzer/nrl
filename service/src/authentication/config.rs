@@ -56,5 +56,9 @@ impl ServerConfig for BuiltConfig {
             web::resource("/authentication/{id}")
                 .route(web::get().to(super::endpoints::start_authentication)),
         );
+        config.service(
+            web::resource("/authentication/{id}/complete")
+                .route(web::get().to(super::endpoints::complete_authentication)),
+        );
     }
 }
