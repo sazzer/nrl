@@ -75,9 +75,10 @@ impl CompleteAuthentication for GoogleAuthenticator {
         let id_token = dangerous_insecure_decode::<IdTokenClaims>(&google_result.id_token?).ok()?;
 
         Some(AuthenticatedUser {
-            user_id: id_token.claims.sub.parse().ok()?,
-            display_name: id_token.claims.given_name.parse().ok()?,
-            email: id_token.claims.email.parse().ok(),
+            authenticated_user_id: id_token.claims.sub.parse().ok()?,
+            authenticated_display_name: id_token.claims.email.clone(),
+            user_display_name: id_token.claims.given_name.parse().ok()?,
+            user_email: id_token.claims.email.parse().ok(),
         })
     }
 }

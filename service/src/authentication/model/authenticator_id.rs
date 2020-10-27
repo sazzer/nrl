@@ -1,4 +1,6 @@
+use crate::users::{ProviderID, ProviderIDParseError};
 use serde::Serialize;
+use std::convert::TryInto;
 use std::str::FromStr;
 
 /// The ID of an authenticator.
@@ -19,6 +21,14 @@ impl FromStr for AuthenticatorID {
             "" => Err(Self::Err::Blank),
             value => Ok(Self(value.to_owned())),
         }
+    }
+}
+
+impl TryInto<ProviderID> for AuthenticatorID {
+    type Error = ProviderIDParseError;
+
+    fn try_into(self) -> Result<ProviderID, ProviderIDParseError> {
+        self.0.parse()
     }
 }
 

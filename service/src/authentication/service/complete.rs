@@ -2,9 +2,10 @@ use crate::authentication::{
     AuthenticationService, AuthenticatorID, CompleteAuthenticationError,
     CompleteAuthenticationUseCase,
 };
-use crate::users::UserModel;
+use crate::users::{AuthenticateUserError, AuthenticateUserUseCase, Authentication, UserModel};
 use async_trait::async_trait;
 use std::collections::HashMap;
+use std::convert::TryInto;
 
 #[async_trait]
 impl CompleteAuthenticationUseCase for AuthenticationService {
@@ -32,8 +33,34 @@ impl CompleteAuthenticationUseCase for AuthenticationService {
             .await
             .ok_or(CompleteAuthenticationError::AuthenticationFailure)?;
 
-        tracing::debug!(user = ?user_details, authenticator = ?authenticator_id, "Authenticated successfully");
+        let user = self
+            .users_service
+            .authenticate_user(
+                Authentication {
+                    provider: authenticator_id
+                        .try_into()
+                        .map_err(|_| CompleteAuthenticationError::UnexpectedError)?,
+                    user: user_details.authenticated_user_id,
+                    display_name: user_details.authenticated_display_name,
+                },
+                user_details.user_display_name,
+                user_details.user_email,
+            )
+            .await
+            .map_err(|e| {
+                tracing::warn!(e = ?e, "An error occurred authenticating the user");
+                match e {
+                    AuthenticateUserError::DuplicateEmail => {
+                        CompleteAuthenticationError::DuplicateEmail
+                    }
+                    AuthenticateUserError::UnknownError => {
+                        CompleteAuthenticationError::UnexpectedError
+                    }
+                }
+            })?;
 
-        Err(CompleteAuthenticationError::AuthenticationFailure)
+        tracing::debug!(user = ?user, "Successfully authenticated user");
+
+        Ok(user)
     }
 }

@@ -5,9 +5,10 @@ use std::collections::HashMap;
 /// Details of a user that has just authenticated.
 #[derive(Debug)]
 pub struct AuthenticatedUser {
-    pub user_id: ProviderUserID,
-    pub display_name: DisplayName,
-    pub email: Option<Email>,
+    pub authenticated_user_id: ProviderUserID,
+    pub authenticated_display_name: String,
+    pub user_display_name: DisplayName,
+    pub user_email: Option<Email>,
 }
 
 /// Trait for starting authentication.

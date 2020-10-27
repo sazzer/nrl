@@ -43,6 +43,12 @@ pub enum CompleteAuthenticationError {
 
     #[error("The user failed to authenticate")]
     AuthenticationFailure,
+
+    #[error("Registering user with a duplicate email address")]
+    DuplicateEmail,
+
+    #[error("An unexpected error occurred")]
+    UnexpectedError,
 }
 
 #[async_trait]

@@ -3,17 +3,25 @@ mod list;
 mod start;
 
 use crate::authentication::{repository::AuthenticatorRepository, Authenticator, AuthenticatorID};
+use crate::users::UsersService;
 use std::sync::Arc;
 
 /// The actual authentication service.
 pub struct AuthenticationService {
     repository: AuthenticatorRepository,
+    users_service: Arc<UsersService>,
 }
 
 impl AuthenticationService {
     /// Create a new Authentication service.
-    pub const fn new(repository: AuthenticatorRepository) -> Self {
-        Self { repository }
+    pub const fn new(
+        repository: AuthenticatorRepository,
+        users_service: Arc<UsersService>,
+    ) -> Self {
+        Self {
+            repository,
+            users_service,
+        }
     }
 
     /// Add a new authenticator to the repository.
