@@ -7,4 +7,5 @@ mod usecases;
 
 pub use authorizer::*;
 pub use model::*;
+pub use service::AuthorizationService;
 pub use usecases::*;

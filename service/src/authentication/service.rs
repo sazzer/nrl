@@ -3,6 +3,7 @@ mod list;
 mod start;
 
 use crate::authentication::{repository::AuthenticatorRepository, Authenticator, AuthenticatorID};
+use crate::authorization::AuthorizationService;
 use crate::users::UsersService;
 use std::sync::Arc;
 
@@ -10,6 +11,7 @@ use std::sync::Arc;
 pub struct AuthenticationService {
     repository: AuthenticatorRepository,
     users_service: Arc<UsersService>,
+    authorization_service: Arc<AuthorizationService>,
 }
 
 impl AuthenticationService {
@@ -17,10 +19,12 @@ impl AuthenticationService {
     pub const fn new(
         repository: AuthenticatorRepository,
         users_service: Arc<UsersService>,
+        authorization_service: Arc<AuthorizationService>,
     ) -> Self {
         Self {
             repository,
             users_service,
+            authorization_service,
         }
     }
 

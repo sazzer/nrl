@@ -23,9 +23,12 @@ pub async fn complete_authentication(
 ) -> Result<HttpResponse, Problem> {
     let authenticator: AuthenticatorID = path.0.parse().map_err(|_| Problem::from(NOT_FOUND))?;
 
-    let _result = authentication_service
+    let (user, security_context, signed_security_context) = authentication_service
         .complete(authenticator, params.0)
-        .await;
+        .await
+        .unwrap();
+
+    tracing::info!(user = ?user, security_context = ?security_context, signed_security_context = ?signed_security_context, "Authenticated");
 
     Ok(HttpResponse::Ok().finish())
 }

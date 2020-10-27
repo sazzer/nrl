@@ -1,4 +1,6 @@
-use crate::{authentication::AuthenticatorID, users::UserModel};
+use crate::authentication::AuthenticatorID;
+use crate::authorization::{SecurityContext, SignedSecurityContext};
+use crate::users::UserModel;
 use async_trait::async_trait;
 use std::collections::HashMap;
 
@@ -66,5 +68,5 @@ pub trait CompleteAuthenticationUseCase {
         &self,
         authenticator: AuthenticatorID,
         params: HashMap<String, String>,
-    ) -> Result<UserModel, CompleteAuthenticationError>;
+    ) -> Result<(UserModel, SecurityContext, SignedSecurityContext), CompleteAuthenticationError>;
 }

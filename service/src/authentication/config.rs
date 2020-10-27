@@ -1,4 +1,5 @@
 use crate::authentication::{repository::AuthenticatorRepository, service::AuthenticationService};
+use crate::authorization::AuthorizationService;
 use crate::infrastructure::server::ServerConfig;
 use crate::users::UsersService;
 use actix_web::web;
@@ -15,9 +16,16 @@ pub struct Config {
 
 impl Config {
     /// Create a new authentication component.
-    pub fn new(users_service: Arc<UsersService>) -> Self {
+    pub fn new(
+        users_service: Arc<UsersService>,
+        authorization_service: Arc<AuthorizationService>,
+    ) -> Self {
         Self {
-            service: AuthenticationService::new(AuthenticatorRepository::new(), users_service),
+            service: AuthenticationService::new(
+                AuthenticatorRepository::new(),
+                users_service,
+                authorization_service,
+            ),
         }
     }
 

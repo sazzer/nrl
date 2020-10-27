@@ -35,9 +35,12 @@ impl Service {
         let authorization = Arc::new(crate::authorization::config::Config::new());
         let users = Arc::new(crate::users::config::Config::new(db.clone()));
         let authentication = Arc::new(
-            crate::authentication::config::Config::new(users.service.clone())
-                .with_google(settings.google_config)
-                .build(),
+            crate::authentication::config::Config::new(
+                users.service.clone(),
+                authorization.service.clone(),
+            )
+            .with_google(settings.google_config)
+            .build(),
         );
 
         let mut health_components: HashMap<String, Arc<dyn health::Healthchecker>> = HashMap::new();

@@ -2,6 +2,9 @@ use crate::authentication::{
     AuthenticationService, AuthenticatorID, CompleteAuthenticationError,
     CompleteAuthenticationUseCase,
 };
+use crate::authorization::{
+    GenerateSecurityContextUseCase, SecurityContext, SignedSecurityContext,
+};
 use crate::users::{AuthenticateUserError, AuthenticateUserUseCase, Authentication, UserModel};
 use async_trait::async_trait;
 use std::collections::HashMap;
@@ -22,7 +25,8 @@ impl CompleteAuthenticationUseCase for AuthenticationService {
         &self,
         authenticator_id: AuthenticatorID,
         params: HashMap<String, String>,
-    ) -> Result<UserModel, CompleteAuthenticationError> {
+    ) -> Result<(UserModel, SecurityContext, SignedSecurityContext), CompleteAuthenticationError>
+    {
         let authenticator = self
             .repository
             .get(&authenticator_id)
@@ -59,8 +63,12 @@ impl CompleteAuthenticationUseCase for AuthenticationService {
                 }
             })?;
 
+        let (security_context, signed_security_context) = self
+            .authorization_service
+            .generate_security_context((&user.identity.id).into());
+
         tracing::debug!(user = ?user, "Successfully authenticated user");
 
-        Ok(user)
+        Ok((user, security_context, signed_security_context))
     }
 }
