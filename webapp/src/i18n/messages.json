@@ -1,3 +1,6 @@
 {
-  "hello": "Hello, World!" 
+  "header": {
+    "title": "NRL",
+    "toggleNavigation": "Toggle Navigation"
+  }
 }
