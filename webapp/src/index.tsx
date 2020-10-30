@@ -1,6 +1,6 @@
 import "./i18n";
 
-import { App } from "./App";
+import { App } from "./ui/App";
 import React from "react";
 import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
