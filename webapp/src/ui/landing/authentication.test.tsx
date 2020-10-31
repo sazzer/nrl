@@ -3,10 +3,27 @@ import { render, waitFor } from "@testing-library/react";
 import { AuthenticationPane } from "./authentication";
 import React from "react";
 import { axe } from "jest-axe";
+import { listProviders } from "../../api/authentication";
+import { resourceCache } from "use-async-resource";
+
+jest.mock("../../api/authentication");
 
 describe("<Authentication>", () => {
+  const listProvidersMock = listProviders as jest.Mock;
+
+  beforeEach(() => {
+    resourceCache(listProviders).clear();
+    listProvidersMock.mockClear();
+  });
+
   test("After some authentication providers are loaded", async () => {
-    const { container } = render(<AuthenticationPane />);
+    listProvidersMock.mockResolvedValueOnce(["facebook", "twitter"]);
+
+    const { container, findByText } = render(<AuthenticationPane />);
+    await waitFor(() => expect(listProvidersMock).toHaveBeenCalledTimes(1), {
+      container,
+    });
+    await findByText("Sign in with Facebook");
 
     await expect(container).toMatchInlineSnapshot(`
             <div>
@@ -15,24 +32,6 @@ describe("<Authentication>", () => {
                   Login / Register
                 </h2>
                 <button
-                  class="btn btn-block btn-social btn-twitter"
-                >
-                  <span
-                    class="fa fa-twitter"
-                  />
-                   
-                  Sign in with Twitter
-                </button>
-                <button
-                  class="btn btn-block btn-social btn-google"
-                >
-                  <span
-                    class="fa fa-google"
-                  />
-                   
-                  Sign in with Google
-                </button>
-                <button
                   class="btn btn-block btn-social btn-facebook"
                 >
                   <span
@@ -40,6 +39,15 @@ describe("<Authentication>", () => {
                   />
                    
                   Sign in with Facebook
+                </button>
+                <button
+                  class="btn btn-block btn-social btn-twitter"
+                >
+                  <span
+                    class="fa fa-twitter"
+                  />
+                   
+                  Sign in with Twitter
                 </button>
               </div>
             </div>

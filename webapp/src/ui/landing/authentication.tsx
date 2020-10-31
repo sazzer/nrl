@@ -1,5 +1,8 @@
-import React from "react";
+import React, { Suspense } from "react";
+
 import debug from "debug";
+import { listProviders } from "../../api/authentication";
+import { useAsyncResource } from "use-async-resource";
 import { useTranslation } from "react-i18next";
 
 /** The logger to use */
@@ -34,12 +37,37 @@ const AuthenticationButton: React.FC<AuthenticationButtonProps> = ({
   );
 };
 
+interface AuthenticationButtonsProps {
+  providers: () => string[];
+  onClick: (provider: string) => void;
+}
+
+/**
+ * Render the list of authentication buttons to display
+ */
+const AuthenticationButtons: React.FC<AuthenticationButtonsProps> = ({
+  providers,
+  onClick,
+}) => {
+  return (
+    <>
+      {providers().map((provider) => (
+        <AuthenticationButton
+          provider={provider}
+          key={provider}
+          onClick={() => onClick(provider)}
+        />
+      ))}
+    </>
+  );
+};
+
 /**
  * Pane on the landing page for the authentication details.
  */
 export const AuthenticationPane: React.FC = () => {
   const { t } = useTranslation();
-  const providers = ["twitter", "google", "facebook"];
+  const [providers] = useAsyncResource(listProviders, []);
 
   const authenticate = (provider: string) => {
     LOGGER("Authenticating with provider: %o", provider);
@@ -48,13 +76,9 @@ export const AuthenticationPane: React.FC = () => {
   return (
     <div>
       <h2>{t("landing.authentication.title")}</h2>
-      {providers.map((provider) => (
-        <AuthenticationButton
-          provider={provider}
-          key={provider}
-          onClick={() => authenticate(provider)}
-        />
-      ))}
+      <Suspense fallback={"loading"}>
+        <AuthenticationButtons providers={providers} onClick={authenticate} />
+      </Suspense>
     </div>
   );
 };
