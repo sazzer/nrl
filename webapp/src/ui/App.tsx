@@ -4,9 +4,11 @@ import React from "react";
 
 export const App: React.FC = () => {
   return (
-    <>
+    <div>
       <HeaderBar />
-      <LandingPage />
-    </>
+      <div className="container-fluid">
+        <LandingPage />
+      </div>
+    </div>
   );
 };

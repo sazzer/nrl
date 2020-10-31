@@ -2,5 +2,15 @@
   "header": {
     "title": "NRL",
     "toggleNavigation": "Toggle Navigation"
+  },
+  "landing": {
+    "authentication": {
+      "title": "Login / Register",
+      "button": {
+        "twitter": "Sign in with Twitter",
+        "google": "Sign in with Google",
+        "facebook": "Sign in with Facebook"
+      }
+    }
   }
 }
