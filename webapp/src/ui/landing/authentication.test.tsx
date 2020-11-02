@@ -3,24 +3,22 @@ import { render, waitFor } from "@testing-library/react";
 import { AuthenticationPane } from "./authentication";
 import React from "react";
 import { axe } from "jest-axe";
-import { listProviders } from "../../api/authentication";
-import { resourceCache } from "use-async-resource";
+import { useProviders } from "../../api/authentication";
 
 jest.mock("../../api/authentication");
 
 describe("<Authentication>", () => {
-  const listProvidersMock = listProviders as jest.Mock;
+  const useProvidersMock = useProviders as jest.Mock;
 
   beforeEach(() => {
-    resourceCache(listProviders).clear();
-    listProvidersMock.mockClear();
+    useProvidersMock.mockClear();
   });
 
   test("After some authentication providers are loaded", async () => {
-    listProvidersMock.mockResolvedValueOnce(["facebook", "twitter"]);
+    useProvidersMock.mockReturnValue(["facebook", "twitter"]);
 
     const { container, findByText } = render(<AuthenticationPane />);
-    await waitFor(() => expect(listProvidersMock).toHaveBeenCalledTimes(1), {
+    await waitFor(() => expect(useProvidersMock).toHaveBeenCalledTimes(1), {
       container,
     });
     await findByText("Sign in with Facebook");
