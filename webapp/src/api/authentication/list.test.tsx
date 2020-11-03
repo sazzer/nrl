@@ -1,10 +1,10 @@
 import * as sut from "./list";
 
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
-import { act, renderHook } from "@testing-library/react-hooks";
 
 import React from "react";
 import nock from "nock";
+import { renderHook } from "@testing-library/react-hooks";
 
 describe("List Authentication Providers", () => {
   const queryCache = new QueryCache();

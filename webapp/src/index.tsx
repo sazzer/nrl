@@ -1,12 +1,6 @@
 import "./i18n";
 
-import {
-  QueryCache,
-  ReactQueryCacheProvider,
-  useMutation,
-  useQuery,
-  useQueryCache,
-} from "react-query";
+import { QueryCache, ReactQueryCacheProvider } from "react-query";
 
 import { App } from "./ui/App";
 import { BrowserRouter } from "react-router-dom";
