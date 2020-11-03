@@ -3,6 +3,7 @@ use bytes::BytesMut;
 use postgres_types::{accepts, to_sql_checked, FromSql, IsNull, ToSql, Type};
 use serde::Serialize;
 use std::str::FromStr;
+use uritemplate::{IntoTemplateVar, TemplateVar};
 use uuid::Uuid;
 
 /// The actual ID of the user resource.
@@ -55,5 +56,11 @@ impl ToSql for UserID {
         w: &mut BytesMut,
     ) -> Result<IsNull, Box<dyn std::error::Error + Sync + Send>> {
         self.0.to_sql(t, w)
+    }
+}
+
+impl<'a> IntoTemplateVar for UserID {
+    fn into_template_var(self) -> TemplateVar {
+        TemplateVar::Scalar(self.0.to_string())
     }
 }

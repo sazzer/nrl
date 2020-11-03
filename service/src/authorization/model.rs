@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use std::fmt::{Display, Formatter};
+use uritemplate::{IntoTemplateVar, TemplateVar};
 use uuid::Uuid;
 
 /// A `Principal` is some entity that has been authorized to perform actions.
@@ -39,5 +40,11 @@ pub struct SignedSecurityContext(pub(super) String);
 impl Display for SignedSecurityContext {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
+    }
+}
+
+impl<'a> IntoTemplateVar for SignedSecurityContext {
+    fn into_template_var(self) -> TemplateVar {
+        TemplateVar::Scalar(self.0)
     }
 }
