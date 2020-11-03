@@ -22,6 +22,10 @@ async function listProviders(): Promise<string[]> {
 }
 
 export function useProviders(): string[] {
-  const { data } = useQuery<string[]>("providers", listProviders);
+  const { data } = useQuery<string[]>("providers", listProviders, {
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   return data ?? [];
 }
