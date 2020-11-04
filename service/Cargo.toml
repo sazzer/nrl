@@ -44,3 +44,4 @@ assert2 = "0.3.3"
 insta = {version = "1.0.0", features=["redactions"] }
 
 nrl_testdatabase = { path = "crates/testdatabase" }
+url = "2.1.1"

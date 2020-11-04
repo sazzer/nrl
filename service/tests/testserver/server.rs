@@ -27,7 +27,7 @@ impl TestServer {
             google_config: Some(nrl_lib::GoogleConfig {
                 client_id: "googleClientId".parse().unwrap(),
                 client_secret: "googleClientSecret".parse().unwrap(),
-                redirect_uri: "http://www.example.com/authenticate/google/callback".to_owned(),
+                redirect_uri: "http://www.example.com/authentication/google/complete".to_owned(),
                 auth_uri: None,
                 token_uri: None,
             }),

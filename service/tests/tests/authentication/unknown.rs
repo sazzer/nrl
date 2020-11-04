@@ -9,11 +9,16 @@ async fn test_start_blank_provider() {
     let sut = TestServer::new().await;
 
     let response = sut
-        .inject(TestRequest::get().uri("/authentication/%20").to_request())
+        .inject(
+            TestRequest::get()
+                .uri("/authentication/%20?redirect_url=http%3A%2F%2Fwww.example.com")
+                .to_request(),
+        )
         .await;
 
     check!(response.status == StatusCode::NOT_FOUND);
     check!(response.header("content-type").unwrap() == "application/problem+json");
+    check!(response.header("set-cookie") == None);
     assert_json_snapshot!(response.to_json().unwrap(), @r###"
     {
       "type": "tag:nrl/2020:problems/not_found",
@@ -30,13 +35,14 @@ async fn test_start_unknown_provider() {
     let response = sut
         .inject(
             TestRequest::get()
-                .uri("/authentication/unknown")
+                .uri("/authentication/unknown?redirect_url=http%3A%2F%2Fwww.example.com")
                 .to_request(),
         )
         .await;
 
     check!(response.status == StatusCode::NOT_FOUND);
     check!(response.header("content-type").unwrap() == "application/problem+json");
+    check!(response.header("set-cookie") == None);
     assert_json_snapshot!(response.to_json().unwrap(), @r###"
         {
           "type": "tag:nrl/2020:problems/not_found",
