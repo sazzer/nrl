@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>NRL</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sandstone/bootstrap.min.css" integrity="sha384-zEpdAL7W11eTKeoBJK1g79kgl9qjP7g84KfK3AZsuonx38n8ad+f5ZgXtoSDxPOh" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css" integrity="sha512-f8mUMCRNrJxPBDzPJx3n+Y5TC5xp6SmStstEfgsDXZJTcxBakoB5hvPLhAfJKa9rCvH+n3xpJ2vQByxLk4WP2g==" crossorigin="anonymous" />
+  </head>
+  <body>
+    <div id="root">
+      Thank you for authenticating
+      <table class="table table-borderless table-small">
+        <tr>
+          <th>User ID</th>
+          <td id="authenticatedUserId"></td>
+        </tr>
+        <tr>
+          <th>Token</th>
+          <td id="authenticatedToken"></td>
+        </tr>
+        <tr>
+          <th>Expires</th>
+          <td id="authenticatedExpires"></td>
+        </tr>
+      </table>
+    </div>
+    <script>
+      const parsedUrl = window.location.hash.substr(1).split('&').map(v => v.split('=', 2).map(decodeURIComponent));
+      const entries = Object.fromEntries(new Map(parsedUrl));
+      document.getElementById("authenticatedUserId").innerText = entries.user_id;
+      document.getElementById("authenticatedToken").innerText = entries.token;
+      document.getElementById("authenticatedExpires").innerText = entries.expires;
+    </script>
+  </body>
+</html>

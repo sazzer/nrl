@@ -15,13 +15,18 @@ export interface AuthenticateHook {
  */
 export function useAuthenticate(): AuthenticateHook {
   const template = UrlTemplate.parse(
-    env("URL_BASE") + "/authentication/{provider}"
+    env("URL_BASE") + "/authentication/{provider}{?redirect_url}"
   );
+  const redirect_url = `${window.location.origin}/authenticated.html`;
 
   return {
     authenticate: (provider: string) => {
-      LOGGER("Authenticating with provider: %s", provider);
-      const url = template.expand({ provider });
+      LOGGER(
+        "Authenticating with provider %s redirecting to %s",
+        provider,
+        redirect_url
+      );
+      const url = template.expand({ provider, redirect_url });
       window.open(url, "nrl:authentication");
     },
   };
