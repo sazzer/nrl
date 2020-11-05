@@ -26,6 +26,15 @@ export function useAuthenticate(): AuthenticateHook {
         provider,
         redirect_url
       );
+
+      const eventListener = (event: MessageEvent) => {
+        if (event && event.data && event.data.type === "nrlAuthenticated") {
+          window.removeEventListener("message", eventListener);
+          LOGGER("Authenticated with provider %s: %o", provider, event.data);
+        }
+      };
+      window.addEventListener("message", eventListener);
+
       const url = template.expand({ provider, redirect_url });
       window.open(url, "nrl:authentication");
     },

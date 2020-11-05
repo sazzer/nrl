@@ -35,6 +35,16 @@
       document.getElementById("authenticatedUserId").innerText = entries.user_id;
       document.getElementById("authenticatedToken").innerText = entries.token;
       document.getElementById("authenticatedExpires").innerText = entries.expires;
+
+      const message = {
+        type: 'nrlAuthenticated',
+        user_id: entries.user_id,
+        token: entries.token,
+        expires: new Date(entries.expires),
+      };
+      window.opener.postMessage(message, '*');
+
+      window.close();
     </script>
   </body>
 </html>
