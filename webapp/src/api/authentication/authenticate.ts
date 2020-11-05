@@ -1,6 +1,7 @@
 import UrlTemplate from "url-template";
 import debug from "debug";
 import env from "@beam-australia/react-env";
+import { setToken } from "../http/token";
 
 /** The logger to use */
 const LOGGER = debug("nrl:api:authentication:authenticate");
@@ -31,6 +32,8 @@ export function useAuthenticate(): AuthenticateHook {
         if (event && event.data && event.data.type === "nrlAuthenticated") {
           window.removeEventListener("message", eventListener);
           LOGGER("Authenticated with provider %s: %o", provider, event.data);
+
+          setToken(event.data.token, event.data.expires);
         }
       };
       window.addEventListener("message", eventListener);

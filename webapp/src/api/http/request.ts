@@ -1,6 +1,7 @@
 import UrlTemplate from "url-template";
 import debug from "debug";
 import env from "@beam-australia/react-env";
+import { getToken } from "./token";
 
 /** The logger to use */
 const LOGGER = debug("nrl:api:http:request");
@@ -59,6 +60,11 @@ export async function request<B>(
 
   if (request.body) {
     headers.set("content-type", "application/json");
+  }
+
+  const token = getToken();
+  if (token) {
+    headers.set("authorization", `Bearer ${token}`);
   }
 
   try {
