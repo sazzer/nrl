@@ -40,12 +40,19 @@ pub async fn complete_authentication(
     tracing::info!(user = ?user, security_context = ?security_context, signed_security_context = ?signed_security_context, "Authenticated");
 
     let redirect_url = UriTemplate::new(&format!(
-        "{}#user_id={{user_id}}&token={{token}}&expires={{expires}}",
+        "{}#user_id={{user_id}}&token={{token}}&expires={{expires}}&complete={{complete}}",
         redirect_url
     ))
     .set("user_id", user.identity.id)
     .set("token", signed_security_context)
     .set("expires", security_context.expires.to_rfc3339())
+    .set(
+        "complete",
+        match user.data.username {
+            Some(_) => "true",
+            None => "false",
+        },
+    )
     .build();
 
     Ok(HttpResponse::Found()
