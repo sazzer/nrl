@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import debug from "debug";
 
@@ -81,7 +81,7 @@ export type UserHook = UserHookWithUser | UserHookWithoutUser;
 /**
  * Hook to access the user details
  */
-export function useUser(): UserHook {
+export function useCurrentUserId(): UserHook {
   const context = useContext(userContext);
 
   if (context.userId) {

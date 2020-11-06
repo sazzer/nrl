@@ -2,7 +2,7 @@ import UrlTemplate from "url-template";
 import debug from "debug";
 import env from "@beam-australia/react-env";
 import { setToken } from "../http/token";
-import { useUser } from "../users";
+import { useCurrentUserId } from "../users";
 
 /** The logger to use */
 const LOGGER = debug("nrl:api:authentication:authenticate");
@@ -16,7 +16,7 @@ export interface AuthenticateHook {
  * @return the hook
  */
 export function useAuthenticate(): AuthenticateHook {
-  const { setUserId } = useUser();
+  const { setUserId } = useCurrentUserId();
 
   const template = UrlTemplate.parse(
     env("URL_BASE") + "/authentication/{provider}{?redirect_url}"
