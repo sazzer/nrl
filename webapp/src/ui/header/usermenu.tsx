@@ -9,17 +9,15 @@ export const UserMenu: React.FC = () => {
   if (user !== undefined) {
     return (
       <li className="nav-item">
-        <a
-          className="nav-link dropdown-toggle"
-          href="#"
+        <button
+          className="nav-link btn dropdown-toggle"
           id="navbarDropdown"
-          role="button"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           {user.displayName}
-        </a>
+        </button>
       </li>
     );
   } else {
